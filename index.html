@@ -62,8 +62,9 @@
       border:0; box-shadow:0 10px 28px rgba(37,99,235,.45); cursor:pointer; }
     .fab:active{transform:translateY(1px)}
 
-    .chat-panel{ position:fixed; right:22px; bottom:92px; width:380px; height:580px; max-width:92vw; max-height:75vh;
-      background:var(--panel); border:1px solid color-mix(in oklab,var(--ink) 15%, #0000); border-radius:18px;
+    .chat-panel{ position:fixed; right:22px; bottom:92px; width:480px; height:640px; /* wider by default */
+      max-width:92vw; max-height:75vh; background:var(--panel);
+      border:1px solid color-mix(in oklab,var(--ink) 15%, #0000); border-radius:18px;
       box-shadow:0 24px 60px rgba(0,0,0,.35); overflow:hidden; display:none; z-index:50; }
     .chat-header{ display:flex; align-items:center; gap:10px; padding:10px 12px;
       border-bottom:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
@@ -81,32 +82,42 @@
     .row .btn{padding:6px 8px}
     @media (max-width:940px){ .hero .container{grid-template-columns:1fr} }
 
-    /* === Web Chat – minimal marketing skin === */
+    /* === Web Chat – marketing skin & full-width bubbles === */
     #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:var(--panel); }
+    #webchat .webchat__basic-transcript { padding-left:6px; padding-right:6px; } /* reclaim space */
     #webchat .webchat__basic-transcript__activity { padding:6px 10px; }
 
+    /* Remove avatar gutter entirely */
+    #webchat .webchat__stacked-layout { --webchat__avatar-size: 0px; }
+    #webchat .webchat__avatar { display:none !important; }
+
+    /* Bubbles: soft border/shadow and allow full width */
     #webchat .webchat__bubble {
-      border-radius:12px; border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
+      border-radius:12px;
+      border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
       box-shadow:0 6px 18px rgba(0,0,0,.06);
+      max-width:100% !important; /* override internal max width */
+      width:100%;
     }
     #webchat .webchat__bubble__content { padding:10px 12px; }
 
+    /* User bubble tint */
     #webchat .webchat__bubble--from-user .webchat__bubble {
       background:color-mix(in oklab,var(--brand) 8%, #fff);
       border-color:color-mix(in oklab,var(--brand) 24%, #fff0);
     }
     #webchat .webchat__bubble--from-bot .webchat__bubble { background:var(--panel); }
 
+    /* Send box */
     #webchat .webchat__send-box { border-top:1px solid color-mix(in oklab,var(--ink) 12%, #0000); background:var(--panel); }
     #webchat .webchat__send-box-text-box__text-area { padding:8px 10px !important; }
-
-    #webchat .webchat__avatar { width:26px; height:26px; border-radius:8px; }
     #webchat .webchat__status { display:none; }
 
-    /* Adaptive Cards – clickable FAQ rows + emphasis */
+    /* --- Adaptive Cards: clickable FAQ rows + emphasis --- */
     .webchat__stacked-layout .ac-selectable { cursor:pointer !important; user-select:none !important; }
     .webchat__stacked-layout .ac-selectable * { cursor:inherit !important; user-select:none !important; }
     .webchat__stacked-layout .ac-selectable:hover { box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); border-radius:6px; }
+
     .webchat__stacked-layout .ac-container[id^="ans_"]{
       border:1px solid rgba(0,0,0,.10); border-radius:8px; padding:8px 10px; margin-top:6px; box-shadow:0 1px 4px rgba(0,0,0,.06);
     }
@@ -224,8 +235,8 @@
     const sizeButtons = document.querySelectorAll('.dev [data-size]');
     sizeButtons.forEach(btn => btn.addEventListener('click', () => {
       const t = btn.dataset.size;
-      if (t === 'floating') { panel.style.width='360px'; panel.style.height='520px'; }
-      if (t === 'sidebar')  { panel.style.width='380px'; panel.style.height='640px'; }
+      if (t === 'floating') { panel.style.width='440px'; panel.style.height='600px'; }
+      if (t === 'sidebar')  { panel.style.width='480px'; panel.style.height='640px'; }
       if (t === 'medium')   { panel.style.width='720px'; panel.style.height='720px'; }
       panel.style.display='block';
     }));
@@ -234,7 +245,7 @@
     // ---- Web Chat setup ----
     (async function () {
       const directLine = window.WebChat.createDirectLine({
-        token: '1w7w8dvH1EdmLkIMZFdAsTJoqTO1yvb7jjuqbrlDJIioFgClm8IXJQQJ99BIACYeBjFAArohAAABAZBS1JYW.9DdSmjwnzpVUhqkt9N8JqLen2Lv3a57pPNdmA7j0lHo2HSAlLWMHJQQJ99BIACYeBjFAArohAAABAZBS42pN' // ← replace with a short-lived token
+        token: '1w7w8dvH1EdmLkIMZFdAsTJoqTO1yvb7jjuqbrlDJIioFgClm8IXJQQJ99BIACYeBjFAArohAAABAZBS1JYW.9DdSmjwnzpVUhqkt9N8JqLen2Lv3a57pPNdmA7j0lHo2HSAlLWMHJQQJ99BIACYeBjFAArohAAABAZBS42pN' 
       });
 
       const brand  = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
@@ -248,12 +259,16 @@
         bubbleFromUserBorderRadius: 12,
         bubbleNubSize: 0,
         bubbleFromUserNubSize: 0,
+
+        // Reclaim width
+        hideBotAvatar: true,
+        hideUserAvatar: true,
+        bubbleMaxWidth: 1200,      // effectively "no limit"; CSS caps at container width
+
         botAvatarInitials: 'HQ',
         userAvatarInitials: 'Me',
         hideUploadButton: true,
         sendBoxPlaceholder: 'Try me: “What is HANS HQ?”',
-        bubbleMaxWidth: 760,
-        hideBotAvatar: true,
         sendBoxButtonColor: brand,
         sendBoxButtonColorOnHover: brand2,
         subtle
@@ -277,7 +292,6 @@
         imageSizes: { small: 24, medium: 48, large: 96 }
       };
 
-      // 🚀 This was missing — actually render Web Chat
       window.WebChat.renderWebChat(
         { directLine, styleOptions, adaptiveCardsHostConfig, locale: 'en-US' },
         document.getElementById('webchat')
@@ -286,4 +300,3 @@
   </script>
 </body>
 </html>
-
