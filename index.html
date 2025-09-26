@@ -132,6 +132,7 @@
       border-color:color-mix(in oklab,var(--brand) 24%, #fff0);
     }
     #webchat .webchat__bubble--from-bot .webchat__bubble { background:var(--panel); }
+    
 
     /* Send box */
     #webchat .webchat__send-box {
@@ -311,22 +312,23 @@
       };
 
       // Light-touch Adaptive Cards defaults (CSS still handles most of the look)
-      const adaptiveCardsHostConfig = {
-        fontFamily: getComputedStyle(document.body).fontFamily,
-        spacing: { small: 6, default: 12, medium: 16, large: 18, extraLarge: 24, padding: 12 },
-        separator: { lineThickness: 1, lineColor: 'rgba(0,0,0,0.10)' },
-        containerStyles: {
-          default: { backgroundColor: 'transparent' },
-          emphasis: { backgroundColor: 'rgba(37,99,235,0.03)' }
-        },
-        actions: { buttonSpacing: 8, maxActions: 6, actionsOrientation: 'horizontal' },
-        imageSizes: { small: 24, medium: 48, large: 96 }
-      };
-
-      window.WebChat.renderWebChat(
-        { directLine, styleOptions, adaptiveCardsHostConfig, locale: 'en-US' },
-        document.getElementById('webchat')
-      );
+const adaptiveCardsHostConfig = {
+  fontFamily: getComputedStyle(document.body).fontFamily,
+  spacing: { small: 6, default: 12, medium: 16, large: 18, extraLarge: 24, padding: 12 },
+  separator: { lineThickness: 1, lineColor: 'rgba(0,0,0,0.10)' },
+  containerStyles: {
+    default: { backgroundColor: 'transparent' },
+    emphasis: { backgroundColor: 'rgba(37,99,235,0.03)' }
+  },
+  actions: {
+    buttonSpacing: 10,
+    maxActions: 10,
+    actionsOrientation: 'vertical',   // <- was "horizontal"
+    actionAlignment: 'stretch',       // <- make each action full-width
+    showCard: { actionMode: 'inline', inlineTopMargin: 8 }
+  },
+  imageSizes: { small: 24, medium: 48, large: 96 }
+};
     })();
   </script>
 
@@ -334,4 +336,5 @@
   <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 </body>
 </html>
+
 
