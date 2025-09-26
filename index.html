@@ -8,13 +8,13 @@
   <link rel="icon" href="data:,">
   <style>
     :root{
-      --bg: #0b1020;           /* hero bg */
-      --ink: #0f172a;
+      --bg:#0b1020;            /* hero bg */
+      --ink:#0f172a;
       --ink-2:#334155;
       --card:#0b1020;
       --brand:#2563eb;
       --brand-2:#1e40af;
-      --ring: rgba(37,99,235,.4);
+      --ring:rgba(37,99,235,.4);
       --panel:#ffffff;
       --muted:#6b7280;
       --page:#f6f7f9;
@@ -25,7 +25,7 @@
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font: 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin:0; font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--ink); background:var(--page);
     }
     a{color:var(--brand); text-decoration:none}
@@ -35,17 +35,14 @@
     /* Header */
     .site-header{
       position:sticky; top:0; z-index:30; backdrop-filter:saturate(180%) blur(6px);
-      background:color-mix(in oklab, var(--page) 92%, #0000);
-      border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
+      background:color-mix(in oklab,var(--page) 92%, #0000);
+      border-bottom:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
     }
-    .nav{
-      display:flex; align-items:center; gap:14px; padding:10px 0;
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px;
-    }
+    .nav{display:flex; align-items:center; gap:14px; padding:10px 0}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px}
     .brand-badge{
-      width:28px;height:28px; border-radius:8px; background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      width:28px; height:28px; border-radius:8px;
+      background:linear-gradient(135deg,var(--brand),var(--brand-2));
       display:grid; place-items:center; color:#fff; font-weight:800; font-size:13px;
       box-shadow:0 4px 14px rgba(37,99,235,.35);
     }
@@ -54,24 +51,23 @@
       appearance:none; border:0; border-radius:10px; padding:8px 12px; font-weight:600; cursor:pointer;
       background:var(--ink); color:#fff;
     }
-    .btn-ghost{background:transparent; color:var(--ink); border:1px solid color-mix(in oklab, var(--ink) 18%, #0000)}
+    .btn-ghost{background:transparent; color:var(--ink); border:1px solid color-mix(in oklab,var(--ink) 18%, #0000)}
     .btn-primary{background:var(--brand)}
     .btn:focus-visible{outline:3px solid var(--ring); outline-offset:2px}
 
     /* Hero */
-    .hero{background: radial-gradient(1200px 400px at 50% -50px, color-mix(in oklab, var(--brand) 22%, #fff0), transparent), var(--bg); color:#e5ecff}
+    .hero{background:radial-gradient(1200px 400px at 50% -50px, color-mix(in oklab,var(--brand) 22%, #fff0), transparent), var(--bg); color:#e5ecff}
     .hero .container{display:grid; grid-template-columns:1.1fr .9fr; gap:28px; padding:48px 20px}
     .hero h1{margin:6px 0 10px; font-size:34px; line-height:1.15}
     .hero p{margin:0 0 16px; color:#cdd8ff}
     .hero-card{
       background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,0));
-      border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:16px;
-      color:#e8eeff;
+      border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:16px; color:#e8eeff;
     }
     .pill{display:inline-flex; gap:8px; align-items:center; border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 10px; font-size:12px; color:#dbe7ff}
     .demo-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px}
     .card{
-      background:var(--panel); border:1px solid color-mix(in oklab, var(--ink) 10%, #0000); border-radius:14px; padding:14px;
+      background:var(--panel); border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); border-radius:14px; padding:14px;
       box-shadow:0 6px 20px rgba(0,0,0,.06)
     }
     .card h3{margin:0 0 6px; font-size:15px}
@@ -81,12 +77,10 @@
     footer{padding:22px 0; color:var(--muted)}
 
     /* Floating Chat */
-    .chat-launcher{
-      position:fixed; right:22px; bottom:22px; z-index:40; display:flex; align-items:center; gap:10px;
-    }
+    .chat-launcher{position:fixed; right:22px; bottom:22px; z-index:40; display:flex; align-items:center; gap:10px}
     .fab{
       width:56px; height:56px; border-radius:50%;
-      background:linear-gradient(135deg, var(--brand), var(--brand-2));
+      background:linear-gradient(135deg,var(--brand),var(--brand-2));
       color:#fff; display:grid; place-items:center; font-weight:800; font-size:18px;
       border:0; box-shadow:0 10px 28px rgba(37,99,235,.45); cursor:pointer;
     }
@@ -94,28 +88,83 @@
 
     .chat-panel{
       position:fixed; right:22px; bottom:92px; width:380px; height:580px; max-width:92vw; max-height:75vh;
-      background:var(--panel); border:1px solid color-mix(in oklab, var(--ink) 15%, #0000); border-radius:18px;
+      background:var(--panel); border:1px solid color-mix(in oklab,var(--ink) 15%, #0000); border-radius:18px;
       box-shadow:0 24px 60px rgba(0,0,0,.35); overflow:hidden; display:none; z-index:50;
     }
     .chat-header{
-      display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
-      background:linear-gradient(180deg, color-mix(in oklab, var(--brand) 8%, var(--panel)), var(--panel));
+      display:flex; align-items:center; gap:10px; padding:10px 12px;
+      border-bottom:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
+      background:linear-gradient(180deg, color-mix(in oklab,var(--brand) 8%, var(--panel)), var(--panel));
     }
     .chat-title{font-weight:700}
     .chat-close{margin-left:auto} .chat-close .btn{padding:6px 10px}
-
     #webchat{height:calc(100% - 44px)}
 
     /* Dev Tools Drawer */
     .dev{
       position:fixed; left:20px; bottom:20px; z-index:45;
-      background:var(--panel); border:1px solid color-mix(in oklab, var(--ink) 10%, #0000); border-radius:12px; padding:10px;
+      background:var(--panel); border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); border-radius:12px; padding:10px;
       box-shadow:0 10px 20px rgba(0,0,0,.1); color:var(--ink)
     }
     .dev label{display:block; font-size:12px; color:var(--muted)}
     .row{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap}
     .row .btn{padding:6px 8px}
     @media (max-width:940px){ .hero .container{grid-template-columns:1fr} }
+
+    /* === Web Chat – minimal marketing skin === */
+    #webchat,
+    #webchat .webchat__stacked-layout,
+    #webchat .webchat__basic-transcript { background:var(--panel); }
+
+    #webchat .webchat__basic-transcript__activity { padding:6px 10px; }
+
+    /* Bubble look */
+    #webchat .webchat__bubble {
+      border-radius:12px;
+      border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
+      box-shadow:0 6px 18px rgba(0,0,0,.06);
+    }
+    #webchat .webchat__bubble__content { padding:10px 12px; }
+
+    /* User bubble tint */
+    #webchat .webchat__bubble--from-user .webchat__bubble {
+      background:color-mix(in oklab,var(--brand) 8%, #fff);
+      border-color:color-mix(in oklab,var(--brand) 24%, #fff0);
+    }
+    #webchat .webchat__bubble--from-bot .webchat__bubble { background:var(--panel); }
+
+    /* Send box */
+    #webchat .webchat__send-box {
+      border-top:1px solid color-mix(in oklab,var(--ink) 12%, #0000);
+      background:var(--panel);
+    }
+    #webchat .webchat__send-box-text-box__text-area { padding:8px 10px !important; }
+
+    /* Avatars */
+    #webchat .webchat__avatar { width:26px; height:26px; border-radius:8px; }
+
+    /* Hide timestamps/status line */
+    #webchat .webchat__status { display:none; }
+
+    /* --- Adaptive Cards: make FAQ rows feel clickable, with subtle emphasis --- */
+    .webchat__stacked-layout .ac-selectable { cursor:pointer !important; user-select:none !important; }
+    .webchat__stacked-layout .ac-selectable * { cursor:inherit !important; user-select:none !important; }
+    .webchat__stacked-layout .ac-selectable:hover { box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); border-radius:6px; }
+
+    .webchat__stacked-layout .ac-container[id^="ans_"]{
+      border:1px solid rgba(0,0,0,.10);
+      border-radius:8px;
+      padding:8px 10px;
+      margin-top:6px;
+      box-shadow:0 1px 4px rgba(0,0,0,.06);
+    }
+    @supports(selector(:has(*))){
+      .webchat__stacked-layout .ac-columnSet:has(+ .ac-container[id^="ans_"]:not([style*="display:none"])){
+        box-shadow:inset 0 0 0 1px rgba(37,99,235,.15);
+        border-radius:6px;
+        background:color-mix(in oklab,var(--brand) 2%, transparent);
+      }
+    }
   </style>
 
   <!-- BotFramework Web Chat -->
@@ -142,9 +191,6 @@
         <span class="pill">🥼 Not medical advice. Definitely opinions.</span>
         <h1>Meet the FAQ bot that exists solely to roast you into using HANS HQ.</h1>
         <p><strong>HANS HQ</strong> helps humans pick supplements without consulting a Reddit shaman. This page is the hype-man. Ask how it works, what it costs, and why this sentence is basically bullying you into clicking the button.</p>
-    </p>
-    </p>
-    </p>
         <div class="row">
           <button class="btn btn-primary" id="ctaOpen">Pitch Me HANS HQ</button>
           <a class="btn btn-ghost" href="docs.html">“Docs” (legal won’t cry)</a>
@@ -152,12 +198,7 @@
         <div class="demo-grid">
           <div class="card"><h3>Private (like it should be)</h3><div class="muted">No PHI. No drama. Just useful guidance and fewer support emails.</div></div>
           <div class="card"><h3>Embeds Anywhere</h3><div class="muted">Drops into your site like rent’s due. Fonts, colors, size — yours, not ours.</div></div>
-          <div class="card">
-            <h3>Overengineered on Purpose</h3>
-            <div class="muted">It answers questions you didn’t even ask, with confidence it definitely hasn’t earned.</div>
-          </div>
-          
-          
+          <div class="card"><h3>Overengineered on Purpose</h3><div class="muted">It answers questions you didn’t even ask, with confidence it definitely hasn’t earned.</div></div>
         </div>
       </div>
       <div class="hero-card">
@@ -232,7 +273,7 @@
     openers.forEach(b=> b?.addEventListener('click', ()=> (panel.style.display='block')));
     closer.addEventListener('click', ()=> (panel.style.display='none'));
 
-    // Size presets for the chat panel
+    // Size presets
     const sizeButtons = document.querySelectorAll('.dev [data-size]');
     sizeButtons.forEach(btn => btn.addEventListener('click', () => {
       const t = btn.dataset.size;
@@ -246,29 +287,50 @@
     // ---- Web Chat setup ----
     (async function () {
       const directLine = window.WebChat.createDirectLine({
-        token: '1w7w8dvH1EdmLkIMZFdAsTJoqTO1yvb7jjuqbrlDJIioFgClm8IXJQQJ99BIACYeBjFAArohAAABAZBS1JYW.9DdSmjwnzpVUhqkt9N8JqLen2Lv3a57pPNdmA7j0lHo2HSAlLWMHJQQJ99BIACYeBjFAArohAAABAZBS42pN' // ← replace with a short-lived test token
+        token: 'YOUR_TEST_TOKEN' // ← replace with a short-lived token
       });
 
+      const brand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
+      const brand2 = getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim();
+      const subtle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
+
       const styleOptions = {
-        bubbleBorderRadius: 10,
-        bubbleFromUserBorderRadius: 10,
+        primaryFont: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
+        fontSize: '13px',
+        bubbleBorderRadius: 12,
+        bubbleFromUserBorderRadius: 12,
+        bubbleNubSize: 0,
+        bubbleFromUserNubSize: 0,
         botAvatarInitials: 'HQ',
         userAvatarInitials: 'Me',
-        sendBoxPlaceholder: 'Try me: “What is HANS HQ?”',
         hideUploadButton: true,
-        // Tighter site look:
-        fontSize: '13px',
-        fontSizeSmall: '12px',
-        subtle: '#94a3b8',
-        transcriptTermSpacing: 6
+        sendBoxPlaceholder: 'Try me: “What is HANS HQ?”',
+        sendBoxButtonColor: brand,
+        sendBoxButtonColorOnHover: brand2,
+        subtle
+      };
+
+      // Light-touch Adaptive Cards defaults (CSS still handles most of the look)
+      const adaptiveCardsHostConfig = {
+        fontFamily: getComputedStyle(document.body).fontFamily,
+        spacing: { small: 6, default: 12, medium: 16, large: 18, extraLarge: 24, padding: 12 },
+        separator: { lineThickness: 1, lineColor: 'rgba(0,0,0,0.10)' },
+        containerStyles: {
+          default: { backgroundColor: 'transparent' },
+          emphasis: { backgroundColor: 'rgba(37,99,235,0.03)' }
+        },
+        actions: { buttonSpacing: 8, maxActions: 6, actionsOrientation: 'horizontal' },
+        imageSizes: { small: 24, medium: 48, large: 96 }
       };
 
       window.WebChat.renderWebChat(
-        { directLine, styleOptions, locale: 'en-US' },
+        { directLine, styleOptions, adaptiveCardsHostConfig, locale: 'en-US' },
         document.getElementById('webchat')
       );
     })();
   </script>
+
+  <!-- BotFramework Web Chat -->
+  <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 </body>
 </html>
-
