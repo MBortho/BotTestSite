@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>HANS HQ • FAQ Hype-Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:,">
+  <style>
+    :root{
+      --bg: #0b1020;           /* hero bg */
+      --ink: #0f172a;
+      --ink-2:#334155;
+      --card:#0b1020;
+      --brand:#2563eb;
+      --brand-2:#1e40af;
+      --ring: rgba(37,99,235,.4);
+      --panel:#ffffff;
+      --muted:#6b7280;
+      --page:#f6f7f9;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --panel:#0b1020; --page:#0a0f1d; --ink:#e5e7eb; --ink-2:#cbd5e1; --muted:#94a3b8; --card:#0a0f1d;}
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font: 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink); background:var(--page);
+    }
+    a{color:var(--brand); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1100px; margin:0 auto; padding:0 20px}
+
+    /* Header */
+    .site-header{
+      position:sticky; top:0; z-index:30; backdrop-filter:saturate(180%) blur(6px);
+      background:color-mix(in oklab, var(--page) 92%, #0000);
+      border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
+    }
+    .nav{
+      display:flex; align-items:center; gap:14px; padding:10px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px;
+    }
+    .brand-badge{
+      width:28px;height:28px; border-radius:8px; background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      display:grid; place-items:center; color:#fff; font-weight:800; font-size:13px;
+      box-shadow:0 4px 14px rgba(37,99,235,.35);
+    }
+    .nav-fill{flex:1}
+    .btn{
+      appearance:none; border:0; border-radius:10px; padding:8px 12px; font-weight:600; cursor:pointer;
+      background:var(--ink); color:#fff;
+    }
+    .btn-ghost{background:transparent; color:var(--ink); border:1px solid color-mix(in oklab, var(--ink) 18%, #0000)}
+    .btn-primary{background:var(--brand)}
+    .btn:focus-visible{outline:3px solid var(--ring); outline-offset:2px}
+
+    /* Hero */
+    .hero{background: radial-gradient(1200px 400px at 50% -50px, color-mix(in oklab, var(--brand) 22%, #fff0), transparent), var(--bg); color:#e5ecff}
+    .hero .container{display:grid; grid-template-columns:1.1fr .9fr; gap:28px; padding:48px 20px}
+    .hero h1{margin:6px 0 10px; font-size:34px; line-height:1.15}
+    .hero p{margin:0 0 16px; color:#cdd8ff}
+    .hero-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,0));
+      border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:16px;
+      color:#e8eeff;
+    }
+    .pill{display:inline-flex; gap:8px; align-items:center; border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 10px; font-size:12px; color:#dbe7ff}
+    .demo-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px}
+    .card{
+      background:var(--panel); border:1px solid color-mix(in oklab, var(--ink) 10%, #0000); border-radius:14px; padding:14px;
+      box-shadow:0 6px 20px rgba(0,0,0,.06)
+    }
+    .card h3{margin:0 0 6px; font-size:15px}
+    .muted{color:var(--muted)}
+
+    /* Footer */
+    footer{padding:22px 0; color:var(--muted)}
+
+    /* Floating Chat */
+    .chat-launcher{
+      position:fixed; right:22px; bottom:22px; z-index:40; display:flex; align-items:center; gap:10px;
+    }
+    .fab{
+      width:56px; height:56px; border-radius:50%;
+      background:linear-gradient(135deg, var(--brand), var(--brand-2));
+      color:#fff; display:grid; place-items:center; font-weight:800; font-size:18px;
+      border:0; box-shadow:0 10px 28px rgba(37,99,235,.45); cursor:pointer;
+    }
+    .fab:active{transform:translateY(1px)}
+
+    .chat-panel{
+      position:fixed; right:22px; bottom:92px; width:380px; height:580px; max-width:92vw; max-height:75vh;
+      background:var(--panel); border:1px solid color-mix(in oklab, var(--ink) 15%, #0000); border-radius:18px;
+      box-shadow:0 24px 60px rgba(0,0,0,.35); overflow:hidden; display:none; z-index:50;
+    }
+    .chat-header{
+      display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
+      background:linear-gradient(180deg, color-mix(in oklab, var(--brand) 8%, var(--panel)), var(--panel));
+    }
+    .chat-title{font-weight:700}
+    .chat-close{margin-left:auto} .chat-close .btn{padding:6px 10px}
+
+    #webchat{height:calc(100% - 44px)}
+
+    /* Dev Tools Drawer */
+    .dev{
+      position:fixed; left:20px; bottom:20px; z-index:45;
+      background:var(--panel); border:1px solid color-mix(in oklab, var(--ink) 10%, #0000); border-radius:12px; padding:10px;
+      box-shadow:0 10px 20px rgba(0,0,0,.1); color:var(--ink)
+    }
+    .dev label{display:block; font-size:12px; color:var(--muted)}
+    .row{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap}
+    .row .btn{padding:6px 8px}
+    @media (max-width:940px){ .hero .container{grid-template-columns:1fr} }
+  </style>
+
+  <!-- BotFramework Web Chat -->
+  <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <div class="site-header">
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-badge">HQ</div>
+        <div>HANS HQ</div>
+      </div>
+      <div class="nav-fill"></div>
+      <button class="btn btn-ghost" id="themeToggle" aria-label="Toggle theme">Dark Mode? Obviously.</button>
+      <button class="btn btn-primary" id="openChatTop">Summon FAQ Bot</button>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div>
+        <span class="pill">🥼 Not medical advice. Definitely opinions.</span>
+        <h1>Meet the FAQ bot that exists solely to roast you into using HANS HQ.</h1>
+        <p><strong>HANS HQ</strong> helps humans pick supplements without consulting a Reddit shaman. This page is the hype-man. Ask how it works, what it costs, and why this sentence is basically bullying you into clicking the button.</p>
+    </p>
+    </p>
+    </p>
+        <div class="row">
+          <button class="btn btn-primary" id="ctaOpen">Pitch Me HANS HQ</button>
+          <a class="btn btn-ghost" href="docs.html">“Docs” (legal won’t cry)</a>
+        </div>
+        <div class="demo-grid">
+          <div class="card"><h3>Private (like it should be)</h3><div class="muted">No PHI. No drama. Just useful guidance and fewer support emails.</div></div>
+          <div class="card"><h3>Embeds Anywhere</h3><div class="muted">Drops into your site like rent’s due. Fonts, colors, size — yours, not ours.</div></div>
+          <div class="card">
+            <h3>Overengineered on Purpose</h3>
+            <div class="muted">It answers questions you didn’t even ask, with confidence it definitely hasn’t earned.</div>
+          </div>
+          
+          
+        </div>
+      </div>
+      <div class="hero-card">
+        <strong>What this bot will tolerate:</strong>
+        <ul>
+          <li>“What is HANS HQ and why do I need it?”</li>
+          <li>“Where does my data go?” (Not into a dumpster fire.)</li>
+          <li>“How hard is setup?” (Shockingly not.)</li>
+          <li>“Is this live chat?” (No. Robots only.)</li>
+        </ul>
+        <div class="muted">Appetizer: this page. Entrée: <em>HANS HQ</em>. Dessert: higher conversions.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content -->
+  <main class="container" style="padding:28px 20px">
+    <div class="card">
+      <h3>Reality check</h3>
+      <p class="muted">Azure’s “Test in Web Chat” is for engineers cosplaying UX. Your visitors are not them. This is how the FAQ bot actually looks on a real marketing page while shamelessly upselling <em>HANS HQ</em>.</p>
+      <p class="muted" style="margin-top:10px"><strong>Nerd note:</strong> Azure OpenAI + a curated FAQ. No diagnoses. No PHI. No nonsense.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container muted">© <span id="year"></span> Ortho Molecular Products • For people who actually read labels.</div>
+  </footer>
+
+  <!-- Floating Chat -->
+  <div class="chat-launcher" aria-live="polite">
+    <span class="muted" id="hint">Click here, regret later</span>
+    <button class="fab" id="openChat" aria-label="Open chat">💬</button>
+  </div>
+
+  <div class="chat-panel" id="chatPanel" aria-label="Chat panel">
+    <div class="chat-header">
+      <div class="brand-badge" style="width:22px;height:22px;font-size:11px">HQ</div>
+      <div class="chat-title">FAQ Hype-Bot • HANS HQ</div>
+      <div class="chat-close"><button class="btn btn-ghost" id="closeChat">GTFO</button></div>
+    </div>
+    <div id="webchat" role="main" aria-label="Chat window"></div>
+  </div>
+
+  <!-- Dev: Size presets -->
+  <div class="dev" aria-label="Dev preview">
+    <label>Preview size (because “responsive”)</label>
+    <div class="row">
+      <button class="btn" data-size="floating">Floating Widget</button>
+      <button class="btn" data-size="sidebar">Sidebar</button>
+      <button class="btn" data-size="medium">Content Block</button>
+      <button class="btn btn-ghost" id="hideDev">Hide</button>
+    </div>
+  </div>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Theme toggle
+    const tog = document.getElementById('themeToggle');
+    tog.addEventListener('click', () => {
+      const current = document.documentElement.style.colorScheme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.style.colorScheme = next;
+    });
+
+    // Chat open/close
+    const panel = document.getElementById('chatPanel');
+    const openers = [document.getElementById('openChat'), document.getElementById('openChatTop'), document.getElementById('ctaOpen')];
+    const closer = document.getElementById('closeChat');
+    openers.forEach(b=> b?.addEventListener('click', ()=> (panel.style.display='block')));
+    closer.addEventListener('click', ()=> (panel.style.display='none'));
+
+    // Size presets for the chat panel
+    const sizeButtons = document.querySelectorAll('.dev [data-size]');
+    sizeButtons.forEach(btn => btn.addEventListener('click', () => {
+      const t = btn.dataset.size;
+      if (t === 'floating') { panel.style.width='360px'; panel.style.height='520px'; }
+      if (t === 'sidebar')  { panel.style.width='380px'; panel.style.height='640px'; }
+      if (t === 'medium')   { panel.style.width='720px'; panel.style.height='720px'; }
+      panel.style.display='block';
+    }));
+    document.getElementById('hideDev').addEventListener('click', e => e.currentTarget.closest('.dev').style.display='none');
+
+    // ---- Web Chat setup ----
+    (async function () {
+      const directLine = window.WebChat.createDirectLine({
+        token: '1w7w8dvH1EdmLkIMZFdAsTJoqTO1yvb7jjuqbrlDJIioFgClm8IXJQQJ99BIACYeBjFAArohAAABAZBS1JYW.9DdSmjwnzpVUhqkt9N8JqLen2Lv3a57pPNdmA7j0lHo2HSAlLWMHJQQJ99BIACYeBjFAArohAAABAZBS42pN' // ← replace with a short-lived test token
+      });
+
+      const styleOptions = {
+        bubbleBorderRadius: 10,
+        bubbleFromUserBorderRadius: 10,
+        botAvatarInitials: 'HQ',
+        userAvatarInitials: 'Me',
+        sendBoxPlaceholder: 'Try me: “What is HANS HQ?”',
+        hideUploadButton: true,
+        // Tighter site look:
+        fontSize: '13px',
+        fontSizeSmall: '12px',
+        subtle: '#94a3b8',
+        transcriptTermSpacing: 6
+      };
+
+      window.WebChat.renderWebChat(
+        { directLine, styleOptions, locale: 'en-US' },
+        document.getElementById('webchat')
+      );
+    })();
+  </script>
+</body>
+</html>
