@@ -8,49 +8,31 @@
   <link rel="icon" href="data:,">
   <style>
     :root{
-      --bg:#0b1020;            /* hero bg */
-      --ink:#0f172a;
-      --ink-2:#334155;
-      --card:#0b1020;
-      --brand:#2563eb;
-      --brand-2:#1e40af;
-      --ring:rgba(37,99,235,.4);
-      --panel:#ffffff;
-      --muted:#6b7280;
-      --page:#f6f7f9;
+      --bg:#0b1020; --ink:#0f172a; --ink-2:#334155; --card:#0b1020;
+      --brand:#2563eb; --brand-2:#1e40af; --ring:rgba(37,99,235,.4);
+      --panel:#ffffff; --muted:#6b7280; --page:#f6f7f9;
     }
     @media (prefers-color-scheme: dark){
       :root{ --panel:#0b1020; --page:#0a0f1d; --ink:#e5e7eb; --ink-2:#cbd5e1; --muted:#94a3b8; --card:#0a0f1d;}
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0; font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--ink); background:var(--page);
-    }
-    a{color:var(--brand); text-decoration:none}
-    a:hover{text-decoration:underline}
+    body{ margin:0; font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:var(--page); }
+    a{color:var(--brand); text-decoration:none} a:hover{text-decoration:underline}
     .container{max-width:1100px; margin:0 auto; padding:0 20px}
 
     /* Header */
-    .site-header{
-      position:sticky; top:0; z-index:30; backdrop-filter:saturate(180%) blur(6px);
+    .site-header{ position:sticky; top:0; z-index:30; backdrop-filter:saturate(180%) blur(6px);
       background:color-mix(in oklab,var(--page) 92%, #0000);
-      border-bottom:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
-    }
+      border-bottom:1px solid color-mix(in oklab,var(--ink) 10%, #0000); }
     .nav{display:flex; align-items:center; gap:14px; padding:10px 0}
     .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px}
-    .brand-badge{
-      width:28px; height:28px; border-radius:8px;
+    .brand-badge{ width:28px; height:28px; border-radius:8px;
       background:linear-gradient(135deg,var(--brand),var(--brand-2));
       display:grid; place-items:center; color:#fff; font-weight:800; font-size:13px;
-      box-shadow:0 4px 14px rgba(37,99,235,.35);
-    }
+      box-shadow:0 4px 14px rgba(37,99,235,.35); }
     .nav-fill{flex:1}
-    .btn{
-      appearance:none; border:0; border-radius:10px; padding:8px 12px; font-weight:600; cursor:pointer;
-      background:var(--ink); color:#fff;
-    }
+    .btn{ appearance:none; border:0; border-radius:10px; padding:8px 12px; font-weight:600; cursor:pointer; background:var(--ink); color:#fff; }
     .btn-ghost{background:transparent; color:var(--ink); border:1px solid color-mix(in oklab,var(--ink) 18%, #0000)}
     .btn-primary{background:var(--brand)}
     .btn:focus-visible{outline:3px solid var(--ring); outline-offset:2px}
@@ -60,16 +42,12 @@
     .hero .container{display:grid; grid-template-columns:1.1fr .9fr; gap:28px; padding:48px 20px}
     .hero h1{margin:6px 0 10px; font-size:34px; line-height:1.15}
     .hero p{margin:0 0 16px; color:#cdd8ff}
-    .hero-card{
-      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,0));
-      border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:16px; color:#e8eeff;
-    }
+    .hero-card{ background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,0));
+      border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:16px; color:#e8eeff; }
     .pill{display:inline-flex; gap:8px; align-items:center; border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 10px; font-size:12px; color:#dbe7ff}
     .demo-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px}
-    .card{
-      background:var(--panel); border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); border-radius:14px; padding:14px;
-      box-shadow:0 6px 20px rgba(0,0,0,.06)
-    }
+    .card{ background:var(--panel); border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); border-radius:14px; padding:14px;
+      box-shadow:0 6px 20px rgba(0,0,0,.06) }
     .card h3{margin:0 0 6px; font-size:15px}
     .muted{color:var(--muted)}
 
@@ -78,107 +56,75 @@
 
     /* Floating Chat */
     .chat-launcher{position:fixed; right:22px; bottom:22px; z-index:40; display:flex; align-items:center; gap:10px}
-    .fab{
-      width:56px; height:56px; border-radius:50%;
+    .fab{ width:56px; height:56px; border-radius:50%;
       background:linear-gradient(135deg,var(--brand),var(--brand-2));
       color:#fff; display:grid; place-items:center; font-weight:800; font-size:18px;
-      border:0; box-shadow:0 10px 28px rgba(37,99,235,.45); cursor:pointer;
-    }
+      border:0; box-shadow:0 10px 28px rgba(37,99,235,.45); cursor:pointer; }
     .fab:active{transform:translateY(1px)}
 
-    .chat-panel{
-      position:fixed; right:22px; bottom:92px; width:380px; height:580px; max-width:92vw; max-height:75vh;
+    .chat-panel{ position:fixed; right:22px; bottom:92px; width:380px; height:580px; max-width:92vw; max-height:75vh;
       background:var(--panel); border:1px solid color-mix(in oklab,var(--ink) 15%, #0000); border-radius:18px;
-      box-shadow:0 24px 60px rgba(0,0,0,.35); overflow:hidden; display:none; z-index:50;
-    }
-    .chat-header{
-      display:flex; align-items:center; gap:10px; padding:10px 12px;
+      box-shadow:0 24px 60px rgba(0,0,0,.35); overflow:hidden; display:none; z-index:50; }
+    .chat-header{ display:flex; align-items:center; gap:10px; padding:10px 12px;
       border-bottom:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
-      background:linear-gradient(180deg, color-mix(in oklab,var(--brand) 8%, var(--panel)), var(--panel));
-    }
+      background:linear-gradient(180deg, color-mix(in oklab,var(--brand) 8%, var(--panel)), var(--panel)); }
     .chat-title{font-weight:700}
     .chat-close{margin-left:auto} .chat-close .btn{padding:6px 10px}
     #webchat{height:calc(100% - 44px)}
 
     /* Dev Tools Drawer */
-    .dev{
-      position:fixed; left:20px; bottom:20px; z-index:45;
-      background:var(--panel); border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); border-radius:12px; padding:10px;
-      box-shadow:0 10px 20px rgba(0,0,0,.1); color:var(--ink)
-    }
+    .dev{ position:fixed; left:20px; bottom:20px; z-index:45; background:var(--panel);
+      border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); border-radius:12px; padding:10px;
+      box-shadow:0 10px 20px rgba(0,0,0,.1); color:var(--ink) }
     .dev label{display:block; font-size:12px; color:var(--muted)}
     .row{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap}
     .row .btn{padding:6px 8px}
     @media (max-width:940px){ .hero .container{grid-template-columns:1fr} }
 
     /* === Web Chat – minimal marketing skin === */
-    #webchat,
-    #webchat .webchat__stacked-layout,
-    #webchat .webchat__basic-transcript { background:var(--panel); }
-
+    #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:var(--panel); }
     #webchat .webchat__basic-transcript__activity { padding:6px 10px; }
 
-    /* Bubble look */
     #webchat .webchat__bubble {
-      border-radius:12px;
-      border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
+      border-radius:12px; border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
       box-shadow:0 6px 18px rgba(0,0,0,.06);
     }
     #webchat .webchat__bubble__content { padding:10px 12px; }
 
-    /* User bubble tint */
     #webchat .webchat__bubble--from-user .webchat__bubble {
       background:color-mix(in oklab,var(--brand) 8%, #fff);
       border-color:color-mix(in oklab,var(--brand) 24%, #fff0);
     }
     #webchat .webchat__bubble--from-bot .webchat__bubble { background:var(--panel); }
-    
 
-    /* Send box */
-    #webchat .webchat__send-box {
-      border-top:1px solid color-mix(in oklab,var(--ink) 12%, #0000);
-      background:var(--panel);
-    }
+    #webchat .webchat__send-box { border-top:1px solid color-mix(in oklab,var(--ink) 12%, #0000); background:var(--panel); }
     #webchat .webchat__send-box-text-box__text-area { padding:8px 10px !important; }
 
-    /* Avatars */
     #webchat .webchat__avatar { width:26px; height:26px; border-radius:8px; }
-
-    /* Hide timestamps/status line */
     #webchat .webchat__status { display:none; }
 
-    /* --- Adaptive Cards: make FAQ rows feel clickable, with subtle emphasis --- */
+    /* Adaptive Cards – clickable FAQ rows + emphasis */
     .webchat__stacked-layout .ac-selectable { cursor:pointer !important; user-select:none !important; }
     .webchat__stacked-layout .ac-selectable * { cursor:inherit !important; user-select:none !important; }
     .webchat__stacked-layout .ac-selectable:hover { box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); border-radius:6px; }
-
     .webchat__stacked-layout .ac-container[id^="ans_"]{
-      border:1px solid rgba(0,0,0,.10);
-      border-radius:8px;
-      padding:8px 10px;
-      margin-top:6px;
-      box-shadow:0 1px 4px rgba(0,0,0,.06);
+      border:1px solid rgba(0,0,0,.10); border-radius:8px; padding:8px 10px; margin-top:6px; box-shadow:0 1px 4px rgba(0,0,0,.06);
     }
     @supports(selector(:has(*))){
       .webchat__stacked-layout .ac-columnSet:has(+ .ac-container[id^="ans_"]:not([style*="display:none"])){
-        box-shadow:inset 0 0 0 1px rgba(37,99,235,.15);
-        border-radius:6px;
-        background:color-mix(in oklab,var(--brand) 2%, transparent);
+        box-shadow:inset 0 0 0 1px rgba(37,99,235,.15); border-radius:6px; background:color-mix(in oklab,var(--brand) 2%, transparent);
       }
     }
   </style>
 
-  <!-- BotFramework Web Chat -->
+  <!-- Load Web Chat once -->
   <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 </head>
 <body>
   <!-- Header -->
   <div class="site-header">
     <div class="container nav">
-      <div class="brand">
-        <div class="brand-badge">HQ</div>
-        <div>HANS HQ</div>
-      </div>
+      <div class="brand"><div class="brand-badge">HQ</div><div>HANS HQ</div></div>
       <div class="nav-fill"></div>
       <button class="btn btn-ghost" id="themeToggle" aria-label="Toggle theme">Dark Mode? Obviously.</button>
       <button class="btn btn-primary" id="openChatTop">Summon FAQ Bot</button>
@@ -291,7 +237,7 @@
         token: '1w7w8dvH1EdmLkIMZFdAsTJoqTO1yvb7jjuqbrlDJIioFgClm8IXJQQJ99BIACYeBjFAArohAAABAZBS1JYW.9DdSmjwnzpVUhqkt9N8JqLen2Lv3a57pPNdmA7j0lHo2HSAlLWMHJQQJ99BIACYeBjFAArohAAABAZBS42pN' // ← replace with a short-lived token
       });
 
-      const brand = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
+      const brand  = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
       const brand2 = getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim();
       const subtle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
 
@@ -311,30 +257,30 @@
         subtle
       };
 
-      // Light-touch Adaptive Cards defaults (CSS still handles most of the look)
-const adaptiveCardsHostConfig = {
-  fontFamily: getComputedStyle(document.body).fontFamily,
-  spacing: { small: 6, default: 12, medium: 16, large: 18, extraLarge: 24, padding: 12 },
-  separator: { lineThickness: 1, lineColor: 'rgba(0,0,0,0.10)' },
-  containerStyles: {
-    default: { backgroundColor: 'transparent' },
-    emphasis: { backgroundColor: 'rgba(37,99,235,0.03)' }
-  },
-  actions: {
-    buttonSpacing: 10,
-    maxActions: 10,
-    actionsOrientation: 'vertical',   // <- was "horizontal"
-    actionAlignment: 'stretch',       // <- make each action full-width
-    showCard: { actionMode: 'inline', inlineTopMargin: 8 }
-  },
-  imageSizes: { small: 24, medium: 48, large: 96 }
-};
+      const adaptiveCardsHostConfig = {
+        fontFamily: getComputedStyle(document.body).fontFamily,
+        spacing: { small: 6, default: 12, medium: 16, large: 18, extraLarge: 24, padding: 12 },
+        separator: { lineThickness: 1, lineColor: 'rgba(0,0,0,0.10)' },
+        containerStyles: {
+          default: { backgroundColor: 'transparent' },
+          emphasis: { backgroundColor: 'rgba(37,99,235,0.03)' }
+        },
+        actions: {
+          buttonSpacing: 10,
+          maxActions: 10,
+          actionsOrientation: 'vertical',
+          actionAlignment: 'stretch',
+          showCard: { actionMode: 'inline', inlineTopMargin: 8 }
+        },
+        imageSizes: { small: 24, medium: 48, large: 96 }
+      };
+
+      // 🚀 This was missing — actually render Web Chat
+      window.WebChat.renderWebChat(
+        { directLine, styleOptions, adaptiveCardsHostConfig, locale: 'en-US' },
+        document.getElementById('webchat')
+      );
     })();
   </script>
-
-  <!-- BotFramework Web Chat -->
-  <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 </body>
 </html>
-
-
