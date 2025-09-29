@@ -249,7 +249,7 @@
     // ---- Web Chat setup (fetch short-lived token from your server) ----
     (async function () {
       try {
-        const res = await fetch('https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token', { credentials: 'include' });
+        const res = await fetch('https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token');
         if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
         const { token } = await res.json();
 
@@ -316,4 +316,5 @@
   </script>
 </body>
 </html>
+
 
