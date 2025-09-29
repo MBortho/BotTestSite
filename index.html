@@ -62,7 +62,7 @@
       border:0; box-shadow:0 10px 28px rgba(37,99,235,.45); cursor:pointer; }
     .fab:active{transform:translateY(1px)}
 
-    .chat-panel{ position:fixed; right:22px; bottom:92px; width:480px; height:640px; /* wider by default */
+    .chat-panel{ position:fixed; right:22px; bottom:92px; width:480px; height:640px;
       max-width:92vw; max-height:75vh; background:var(--panel);
       border:1px solid color-mix(in oklab,var(--ink) 15%, #0000); border-radius:18px;
       box-shadow:0 24px 60px rgba(0,0,0,.35); overflow:hidden; display:none; z-index:50; }
@@ -96,7 +96,7 @@
       border-radius:12px;
       border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
       box-shadow:0 6px 18px rgba(0,0,0,.06);
-      max-width:100% !important; /* override internal max width */
+      max-width:100% !important;
       width:100%;
     }
     #webchat .webchat__bubble__content { padding:10px 12px; }
@@ -126,9 +126,13 @@
         box-shadow:inset 0 0 0 1px rgba(37,99,235,.15); border-radius:6px; background:color-mix(in oklab,var(--brand) 2%, transparent);
       }
     }
+
+    /* Slimmer chips so 3 fit on one line */
+    #webchat .webchat__suggested-actions__button { font-size:12px; padding:6px 10px; min-height:28px; }
+    #webchat .webchat__suggested-actions__carousel .webchat__carousel__content { gap:6px; padding:0 2px; }
   </style>
 
-  <!-- Load Web Chat once -->
+  <!-- BotFramework Web Chat -->
   <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 </head>
 <body>
@@ -242,62 +246,73 @@
     }));
     document.getElementById('hideDev').addEventListener('click', e => e.currentTarget.closest('.dev').style.display='none');
 
-    // ---- Web Chat setup ----
+    // ---- Web Chat setup (fetch short-lived token from your server) ----
     (async function () {
-      const directLine = window.WebChat.createDirectLine({
-        token: '1w7w8dvH1EdmLkIMZFdAsTJoqTO1yvb7jjuqbrlDJIioFgClm8IXJQQJ99BIACYeBjFAArohAAABAZBS1JYW.9DdSmjwnzpVUhqkt9N8JqLen2Lv3a57pPNdmA7j0lHo2HSAlLWMHJQQJ99BIACYeBjFAArohAAABAZBS42pN' 
-      });
+      try {
+        const res = await fetch('/api/directline/token', { credentials: 'include' });
+        if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
+        const { token } = await res.json();
 
-      const brand  = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
-      const brand2 = getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim();
-      const subtle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
+        const prefersStacked = matchMedia('(max-width: 420px)').matches;
 
-      const styleOptions = {
-        primaryFont: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
-        fontSize: '13px',
-        bubbleBorderRadius: 12,
-        bubbleFromUserBorderRadius: 12,
-        bubbleNubSize: 0,
-        bubbleFromUserNubSize: 0,
+        const brand  = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
+        const brand2 = getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim();
+        const subtle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
 
-        // Reclaim width
-        hideBotAvatar: true,
-        hideUserAvatar: true,
-        bubbleMaxWidth: 1200,      // effectively "no limit"; CSS caps at container width
+        const directLine = window.WebChat.createDirectLine({ token });
 
-        botAvatarInitials: 'HQ',
-        userAvatarInitials: 'Me',
-        hideUploadButton: true,
-        sendBoxPlaceholder: 'Try me: “What is HANS HQ?”',
-        sendBoxButtonColor: brand,
-        sendBoxButtonColorOnHover: brand2,
-        subtle
-      };
+        const styleOptions = {
+          primaryFont: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
+          fontSize: '13px',
+          bubbleBorderRadius: 12,
+          bubbleFromUserBorderRadius: 12,
+          bubbleNubSize: 0,
+          bubbleFromUserNubSize: 0,
 
-      const adaptiveCardsHostConfig = {
-        fontFamily: getComputedStyle(document.body).fontFamily,
-        spacing: { small: 6, default: 12, medium: 16, large: 18, extraLarge: 24, padding: 12 },
-        separator: { lineThickness: 1, lineColor: 'rgba(0,0,0,0.10)' },
-        containerStyles: {
-          default: { backgroundColor: 'transparent' },
-          emphasis: { backgroundColor: 'rgba(37,99,235,0.03)' }
-        },
-        actions: {
-          buttonSpacing: 10,
-          maxActions: 10,
-          actionsOrientation: 'vertical',
-          actionAlignment: 'stretch',
-          showCard: { actionMode: 'inline', inlineTopMargin: 8 }
-        },
-        imageSizes: { small: 24, medium: 48, large: 96 }
-      };
+          hideBotAvatar: true,
+          hideUserAvatar: true,
+          bubbleMaxWidth: 1200,
 
-      window.WebChat.renderWebChat(
-        { directLine, styleOptions, adaptiveCardsHostConfig, locale: 'en-US' },
-        document.getElementById('webchat')
-      );
+          botAvatarInitials: 'HQ',
+          userAvatarInitials: 'Me',
+          hideUploadButton: true,
+          sendBoxPlaceholder: 'Try me: “What is HANS HQ?”',
+          sendBoxButtonColor: brand,
+          sendBoxButtonColorOnHover: brand2,
+          subtle,
+
+          // chips layout responsive
+          suggestedActionsLayout: prefersStacked ? 'stacked' : 'carousel'
+        };
+
+        const adaptiveCardsHostConfig = {
+          fontFamily: getComputedStyle(document.body).fontFamily,
+          spacing: { small: 6, default: 12, medium: 16, large: 18, extraLarge: 24, padding: 12 },
+          separator: { lineThickness: 1, lineColor: 'rgba(0,0,0,0.10)' },
+          containerStyles: {
+            default: { backgroundColor: 'transparent' },
+            emphasis: { backgroundColor: 'rgba(37,99,235,0.03)' }
+          },
+          actions: {
+            buttonSpacing: 10,
+            maxActions: 10,
+            actionsOrientation: 'vertical',
+            actionAlignment: 'stretch',
+            showCard: { actionMode: 'inline', inlineTopMargin: 8 }
+          },
+          imageSizes: { small: 24, medium: 48, large: 96 }
+        };
+
+        window.WebChat.renderWebChat(
+          { directLine, styleOptions, adaptiveCardsHostConfig, locale: 'en-US' },
+          document.getElementById('webchat')
+        );
+      } catch (err) {
+        console.error(err);
+        const el = document.getElementById('webchat');
+        el.innerHTML = '<div style="padding:12px;color:#b91c1c">Failed to initialize chat. Please reload.</div>';
+      }
     })();
   </script>
 </body>
 </html>
-
