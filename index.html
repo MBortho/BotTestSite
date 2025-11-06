@@ -2,134 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>HANS HQ • FAQ Hype-Bot</title>
+  <title>HANS HQ • FAQ Assistant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
   <link rel="icon" href="data:,">
   <style>
     :root{
-      --bg:#0b1020; --ink:#0f172a; --ink-2:#334155; --card:#0b1020;
+      --bg:#0b1020; --ink:#0f172a; --ink-2:#334155;
       --brand:#2563eb; --brand-2:#1e40af; --ring:rgba(37,99,235,.4);
       --panel:#ffffff; --muted:#6b7280; --page:#f6f7f9;
     }
     @media (prefers-color-scheme: dark){
-      :root{ --panel:#0b1020; --page:#0a0f1d; --ink:#e5e7eb; --ink-2:#cbd5e1; --muted:#94a3b8; --card:#0a0f1d;}
+      :root{ --panel:#0b1020; --page:#0a0f1d; --ink:#e5e7eb; --ink-2:#cbd5e1; --muted:#94a3b8;}
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{ margin:0; font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:var(--page); }
-    a{color:var(--brand); text-decoration:none} a:hover{text-decoration:underline}
-    .container{max-width:1100px; margin:0 auto; padding:0 20px}
+    body{margin:0; font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:var(--page)}
 
     /* Header */
-    .site-header{ position:sticky; top:0; z-index:30; backdrop-filter:saturate(180%) blur(6px);
-      background:color-mix(in oklab,var(--page) 92%, #0000);
-      border-bottom:1px solid color-mix(in oklab,var(--ink) 10%, #0000); }
-    .nav{display:flex; align-items:center; gap:14px; padding:10px 0}
-    .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px}
-    .brand-badge{ width:28px; height:28px; border-radius:8px;
+    .site-header{
+      position:sticky; top:0; z-index:10; backdrop-filter:saturate(180%) blur(6px);
+      background:color-mix(in oklab, var(--page) 92%, #0000);
+      border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
+    }
+    .nav{max-width:1100px; margin:0 auto; padding:10px 20px; display:flex; align-items:center; gap:12px}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
+    .brand-badge{
+      width:28px; height:28px; border-radius:8px;
       background:linear-gradient(135deg,var(--brand),var(--brand-2));
-      display:grid; place-items:center; color:#fff; font-weight:800; font-size:13px;
-      box-shadow:0 4px 14px rgba(37,99,235,.35); }
+      color:#fff; display:grid; place-items:center; font-weight:800; font-size:13px;
+      box-shadow:0 4px 14px rgba(37,99,235,.35);
+    }
     .nav-fill{flex:1}
-    .btn{ appearance:none; border:0; border-radius:10px; padding:8px 12px; font-weight:600; cursor:pointer; background:var(--ink); color:#fff; }
-    .btn-ghost{background:transparent; color:var(--ink); border:1px solid color-mix(in oklab,var(--ink) 18%, #0000)}
-    .btn-primary{background:var(--brand)}
+    .btn{appearance:none; border:1px solid color-mix(in oklab,var(--ink) 16%, #0000); background:transparent; color:var(--ink);
+      border-radius:10px; padding:8px 12px; font-weight:600; cursor:pointer}
     .btn:focus-visible{outline:3px solid var(--ring); outline-offset:2px}
 
     /* Hero */
-    .hero{background:radial-gradient(1200px 400px at 50% -50px, color-mix(in oklab,var(--brand) 22%, #fff0), transparent), var(--bg); color:#e5ecff}
-    .hero .container{display:grid; grid-template-columns:1.1fr .9fr; gap:28px; padding:48px 20px}
-    .hero h1{margin:6px 0 10px; font-size:34px; line-height:1.15}
-    .hero p{margin:0 0 16px; color:#cdd8ff}
-    .hero-card{ background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,0));
-      border:1px solid rgba(255,255,255,.15); border-radius:16px; padding:16px; color:#e8eeff; }
-    .pill{display:inline-flex; gap:8px; align-items:center; border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:6px 10px; font-size:12px; color:#dbe7ff}
-    .demo-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px}
-    .card{ background:var(--panel); border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); border-radius:14px; padding:14px;
-      box-shadow:0 6px 20px rgba(0,0,0,.06) }
-    .card h3{margin:0 0 6px; font-size:15px}
-    .muted{color:var(--muted)}
+    .hero{
+      background: radial-gradient(1200px 420px at 50% -80px, color-mix(in oklab, var(--brand) 18%, #fff0), transparent), var(--bg);
+      color:#e5ecff;
+    }
+    .hero-inner{max-width:900px; margin:0 auto; padding:44px 20px 28px}
+    .hero h1{margin:6px 0 8px; font-size:32px; line-height:1.2}
+    .hero p{margin:0; color:#cdd8ff}
+
+    /* Main / centered card */
+    .wrap{max-width:980px; margin:0 auto; padding:22px 20px 40px}
+    .card{
+      background:var(--panel);
+      border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
+      border-radius:16px;
+      box-shadow:0 10px 28px rgba(0,0,0,.08);
+      overflow:hidden;
+    }
+    .card-head{padding:18px 18px 0}
+    .card-head h2{margin:0 0 6px; font-size:18px}
+    .card-head p{margin:0 0 16px; color:var(--muted)}
+    .meta{display:flex; gap:12px; flex-wrap:wrap; padding:0 18px 16px}
+    .pill{display:inline-flex; gap:8px; align-items:center; border:1px solid color-mix(in oklab,#fff 0%, var(--ink) 18%); border-radius:999px; padding:6px 10px; font-size:12px; color:var(--muted)}
+
+    /* Chat area (centered) */
+    .chat-shell{padding:0 0 18px}
+    .chat-frame{
+      width:100%;
+      max-width:860px;
+      height:640px;
+      margin:0 auto;
+      background:var(--panel);
+      border-top:1px solid color-mix(in oklab,var(--ink) 8%, #0000);
+    }
+    #webchat{height:100%}
 
     /* Footer */
-    footer{padding:22px 0; color:var(--muted)}
-
-    /* Floating Chat */
-    .chat-launcher{position:fixed; right:22px; bottom:22px; z-index:40; display:flex; align-items:center; gap:10px}
-    .fab{ width:56px; height:56px; border-radius:50%;
-      background:linear-gradient(135deg,var(--brand),var(--brand-2));
-      color:#fff; display:grid; place-items:center; font-weight:800; font-size:18px;
-      border:0; box-shadow:0 10px 28px rgba(37,99,235,.45); cursor:pointer; }
-    .fab:active{transform:translateY(1px)}
-
-    .chat-panel{ position:fixed; right:22px; bottom:92px; width:480px; height:640px;
-      max-width:92vw; max-height:75vh; background:var(--panel);
-      border:1px solid color-mix(in oklab,var(--ink) 15%, #0000); border-radius:18px;
-      box-shadow:0 24px 60px rgba(0,0,0,.35); overflow:hidden; display:none; z-index:50; }
-    .chat-header{ display:flex; align-items:center; gap:10px; padding:10px 12px;
-      border-bottom:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
-      background:linear-gradient(180deg, color-mix(in oklab,var(--brand) 8%, var(--panel)), var(--panel)); }
-    .chat-title{font-weight:700}
-    .chat-close{margin-left:auto} .chat-close .btn{padding:6px 10px}
-    #webchat{height:calc(100% - 44px)}
-
-    /* Dev Tools Drawer */
-    .dev{ position:fixed; left:20px; bottom:20px; z-index:45; background:var(--panel);
-      border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); border-radius:12px; padding:10px;
-      box-shadow:0 10px 20px rgba(0,0,0,.1); color:var(--ink) }
-    .dev label{display:block; font-size:12px; color:var(--muted)}
-    .row{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap}
-    .row .btn{padding:6px 8px}
-    @media (max-width:940px){ .hero .container{grid-template-columns:1fr} }
-
-    /* === Web Chat – marketing skin & full-width bubbles === */
-    #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:var(--panel); }
-    #webchat .webchat__basic-transcript { padding-left:6px; padding-right:6px; } /* reclaim space */
-    #webchat .webchat__basic-transcript__activity { padding:6px 10px; }
-
-    /* Remove avatar gutter entirely */
-    #webchat .webchat__stacked-layout { --webchat__avatar-size: 0px; }
-    #webchat .webchat__avatar { display:none !important; }
-
-    /* Bubbles: soft border/shadow and allow full width */
-    #webchat .webchat__bubble {
-      border-radius:12px;
-      border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
-      box-shadow:0 6px 18px rgba(0,0,0,.06);
-      max-width:100% !important;
-      width:100%;
-    }
-    #webchat .webchat__bubble__content { padding:10px 12px; }
-
-    /* User bubble tint */
-    #webchat .webchat__bubble--from-user .webchat__bubble {
-      background:color-mix(in oklab,var(--brand) 8%, #fff);
-      border-color:color-mix(in oklab,var(--brand) 24%, #fff0);
-    }
-    #webchat .webchat__bubble--from-bot .webchat__bubble { background:var(--panel); }
-
-    /* Send box */
-    #webchat .webchat__send-box { border-top:1px solid color-mix(in oklab,var(--ink) 12%, #0000); background:var(--panel); }
-    #webchat .webchat__send-box-text-box__text-area { padding:8px 10px !important; }
-    #webchat .webchat__status { display:none; }
-
-    /* --- Adaptive Cards: clickable FAQ rows + emphasis --- */
-    .webchat__stacked-layout .ac-selectable { cursor:pointer !important; user-select:none !important; }
-    .webchat__stacked-layout .ac-selectable * { cursor:inherit !important; user-select:none !important; }
-    .webchat__stacked-layout .ac-selectable:hover { box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); border-radius:6px; }
-
-    .webchat__stacked-layout .ac-container[id^="ans_"]{
-      border:1px solid rgba(0,0,0,.10); border-radius:8px; padding:8px 10px; margin-top:6px; box-shadow:0 1px 4px rgba(0,0,0,.06);
-    }
-    @supports(selector(:has(*))){
-      .webchat__stacked-layout .ac-columnSet:has(+ .ac-container[id^="ans_"]:not([style*="display:none"])){
-        box-shadow:inset 0 0 0 1px rgba(37,99,235,.15); border-radius:6px; background:color-mix(in oklab,var(--brand) 2%, transparent);
-      }
-    }
-
-    /* Slimmer chips so 3 fit on one line */
-    #webchat .webchat__suggested-actions__button { font-size:12px; padding:6px 10px; min-height:28px; }
-    #webchat .webchat__suggested-actions__carousel .webchat__carousel__content { gap:6px; padding:0 2px; }
+    footer{padding:22px 0; color:var(--muted); text-align:center}
   </style>
 
   <!-- BotFramework Web Chat -->
@@ -137,84 +83,44 @@
 </head>
 <body>
   <!-- Header -->
-  <div class="site-header">
-    <div class="container nav">
+  <div class="site-header" role="banner">
+    <div class="nav">
       <div class="brand"><div class="brand-badge">HQ</div><div>HANS HQ</div></div>
       <div class="nav-fill"></div>
-      <button class="btn btn-ghost" id="themeToggle" aria-label="Toggle theme">Dark Mode? Obviously.</button>
-      <button class="btn btn-primary" id="openChatTop">Summon FAQ Bot</button>
+      <button class="btn" id="themeToggle" aria-label="Toggle theme">Toggle theme</button>
     </div>
   </div>
 
   <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <div>
-        <span class="pill">🥼 Not medical advice. Definitely opinions.</span>
-        <h1>Meet the FAQ bot that exists solely to roast you into using HANS HQ.</h1>
-        <p><strong>HANS HQ</strong> helps humans pick supplements without consulting a Reddit shaman. This page is the hype-man. Ask how it works, what it costs, and why this sentence is basically bullying you into clicking the button.</p>
-        <div class="row">
-          <button class="btn btn-primary" id="ctaOpen">Pitch Me HANS HQ</button>
-          <a class="btn btn-ghost" href="docs.html">“Docs” (legal won’t cry)</a>
-        </div>
-        <div class="demo-grid">
-          <div class="card"><h3>Private (like it should be)</h3><div class="muted">No PHI. No drama. Just useful guidance and fewer support emails.</div></div>
-          <div class="card"><h3>Embeds Anywhere</h3><div class="muted">Drops into your site like rent’s due. Fonts, colors, size — yours, not ours.</div></div>
-          <div class="card"><h3>Overengineered on Purpose</h3><div class="muted">It answers questions you didn’t even ask, with confidence it definitely hasn’t earned.</div></div>
-        </div>
-      </div>
-      <div class="hero-card">
-        <strong>What this bot will tolerate:</strong>
-        <ul>
-          <li>“What is HANS HQ and why do I need it?”</li>
-          <li>“Where does my data go?” (Not into a dumpster fire.)</li>
-          <li>“How hard is setup?” (Shockingly not.)</li>
-          <li>“Is this live chat?” (No. Robots only.)</li>
-        </ul>
-        <div class="muted">Appetizer: this page. Entrée: <em>HANS HQ</em>. Dessert: higher conversions.</div>
-      </div>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>HANS HQ — FAQ Assistant</h1>
+      <p>Temporary access while the main site is being finalized. Use the assistant below to learn about HANS HQ, setup, pricing, and support.</p>
     </div>
-  </section>
+  </header>
 
-  <!-- Content -->
-  <main class="container" style="padding:28px 20px">
-    <div class="card">
-      <h3>Reality check</h3>
-      <p class="muted">Azure’s “Test in Web Chat” is for engineers cosplaying UX. Your visitors are not them. This is how the FAQ bot actually looks on a real marketing page while shamelessly upselling <em>HANS HQ</em>.</p>
-      <p class="muted" style="margin-top:10px"><strong>Nerd note:</strong> Azure OpenAI + a curated FAQ. No diagnoses. No PHI. No nonsense.</p>
-    </div>
+  <!-- Centered Chat -->
+  <main class="wrap" role="main">
+    <section class="card" aria-label="Chat">
+      <div class="card-head">
+        <h2>Ask a question</h2>
+        <p>Examples: “What is HANS HQ?”, “How do I get started?”, “Is PHI collected?”</p>
+        <div class="meta">
+          <span class="pill">No PHI</span>
+          <span class="pill">Marketing-friendly</span>
+          <span class="pill">Button or free-text</span>
+        </div>
+      </div>
+      <div class="chat-shell">
+        <div id="webchat" class="chat-frame" aria-label="Chat window"></div>
+      </div>
+    </section>
   </main>
 
   <!-- Footer -->
   <footer>
-    <div class="container muted">© <span id="year"></span> Ortho Molecular Products • For people who actually read labels.</div>
+    © <span id="year"></span> Ortho Molecular Products
   </footer>
-
-  <!-- Floating Chat -->
-  <div class="chat-launcher" aria-live="polite">
-    <span class="muted" id="hint">Click here, regret later</span>
-    <button class="fab" id="openChat" aria-label="Open chat">💬</button>
-  </div>
-
-  <div class="chat-panel" id="chatPanel" aria-label="Chat panel">
-    <div class="chat-header">
-      <div class="brand-badge" style="width:22px;height:22px;font-size:11px">HQ</div>
-      <div class="chat-title">HANSHQ - FAQ Chat</div>
-      <div class="chat-close"><button class="btn btn-ghost" id="closeChat">Close</button></div>
-    </div>
-    <div id="webchat" role="main" aria-label="Chat window"></div>
-  </div>
-
-  <!-- Dev: Size presets -->
-  <div class="dev" aria-label="Dev preview">
-    <label>Preview size (because “responsive”)</label>
-    <div class="row">
-      <button class="btn" data-size="floating">Floating Widget</button>
-      <button class="btn" data-size="sidebar">Sidebar</button>
-      <button class="btn" data-size="medium">Content Block</button>
-      <button class="btn btn-ghost" id="hideDev">Hide</button>
-    </div>
-  </div>
 
   <script>
     // Year
@@ -223,37 +129,30 @@
     // Theme toggle
     const tog = document.getElementById('themeToggle');
     tog.addEventListener('click', () => {
-      const current = document.documentElement.style.colorScheme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const current =
+        document.documentElement.style.colorScheme ||
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       const next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.style.colorScheme = next;
     });
 
-    // Chat open/close
-    const panel = document.getElementById('chatPanel');
-    const openers = [document.getElementById('openChat'), document.getElementById('openChatTop'), document.getElementById('ctaOpen')];
-    const closer = document.getElementById('closeChat');
-    openers.forEach(b=> b?.addEventListener('click', ()=> (panel.style.display='block')));
-    closer.addEventListener('click', ()=> (panel.style.display='none'));
-
-    // Size presets
-    const sizeButtons = document.querySelectorAll('.dev [data-size]');
-    sizeButtons.forEach(btn => btn.addEventListener('click', () => {
-      const t = btn.dataset.size;
-      if (t === 'floating') { panel.style.width='440px'; panel.style.height='600px'; }
-      if (t === 'sidebar')  { panel.style.width='480px'; panel.style.height='640px'; }
-      if (t === 'medium')   { panel.style.width='720px'; panel.style.height='720px'; }
-      panel.style.display='block';
-    }));
-    document.getElementById('hideDev').addEventListener('click', e => e.currentTarget.closest('.dev').style.display='none');
-
-    // ---- Web Chat setup (fetch short-lived token from your server) ----
+    // ---- Web Chat setup (Direct Line token endpoint) ----
     (async function () {
+      // If you already have a token endpoint, put it here:
+      const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
+      // Or replace with your own API route. Must return: { "token": "<directLineToken>" }
+
+      const el = document.getElementById('webchat');
+
+      // Simple skeleton while loading
+      el.innerHTML =
+        '<div style="height:100%;display:grid;place-items:center;color:var(--muted)">' +
+        '<div>Loading assistant…</div></div>';
+
       try {
-        const res = await fetch('https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token');
+        const res = await fetch(TOKEN_URL, { cache: 'no-store' });
         if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
         const { token } = await res.json();
-
-        const prefersStacked = matchMedia('(max-width: 420px)').matches;
 
         const brand  = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
         const brand2 = getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim();
@@ -268,21 +167,14 @@
           bubbleFromUserBorderRadius: 12,
           bubbleNubSize: 0,
           bubbleFromUserNubSize: 0,
-
           hideBotAvatar: true,
           hideUserAvatar: true,
-          bubbleMaxWidth: 1200,
-
-          botAvatarInitials: 'HQ',
-          userAvatarInitials: 'Me',
-          hideUploadButton: true,
-          sendBoxPlaceholder: 'Try me: “What is HANS HQ?”',
+          bubbleMaxWidth: 1100,
+          sendBoxPlaceholder: 'Type your question…',
           sendBoxButtonColor: brand,
           sendBoxButtonColorOnHover: brand2,
           subtle,
-
-          // chips layout responsive
-          suggestedActionsLayout: prefersStacked ? 'stacked' : 'carousel'
+          suggestedActionsLayout: matchMedia('(max-width: 520px)').matches ? 'stacked' : 'carousel'
         };
 
         const adaptiveCardsHostConfig = {
@@ -294,28 +186,22 @@
             emphasis: { backgroundColor: 'rgba(37,99,235,0.03)' }
           },
           actions: {
-            buttonSpacing: 10,
-            maxActions: 10,
-            actionsOrientation: 'vertical',
-            actionAlignment: 'stretch',
+            buttonSpacing: 10, maxActions: 10, actionsOrientation: 'vertical', actionAlignment: 'stretch',
             showCard: { actionMode: 'inline', inlineTopMargin: 8 }
           },
           imageSizes: { small: 24, medium: 48, large: 96 }
         };
 
-        window.WebChat.renderWebChat(
-          { directLine, styleOptions, adaptiveCardsHostConfig, locale: 'en-US' },
-          document.getElementById('webchat')
-        );
+        // Render
+        el.innerHTML = '';
+        window.WebChat.renderWebChat({ directLine, styleOptions, adaptiveCardsHostConfig, locale: 'en-US' }, el);
       } catch (err) {
         console.error(err);
-        const el = document.getElementById('webchat');
-        el.innerHTML = '<div style="padding:12px;color:#b91c1c">Failed to initialize chat. Please reload.</div>';
+        el.innerHTML =
+          '<div style="height:100%;display:grid;place-items:center;color:#b91c1c">' +
+          '<div>We couldn’t start the assistant. Please refresh this page.</div></div>';
       }
     })();
   </script>
 </body>
 </html>
-
-
-
