@@ -11,10 +11,10 @@
       --bg:#0b1020; --ink:#0f172a; --ink-2:#334155;
       --brand:#2563eb; --brand-2:#1e40af; --ring:rgba(37,99,235,.4);
       --panel:#ffffff; --muted:#6b7280; --page:#0a0f1d;
-      --card-w: 960px;                 /* page card max width */
-      --chat-w: 720px;                 /* chat max width on desktop */
-      --chat-h: clamp(520px, 70vh, 680px);
-      --side-pad: 20px;                /* page side padding */
+      --card-w: 960px;                                  /* page card max width */
+      --chat-w: 720px;                                  /* chat max width (desktop) */
+      --chat-h: clamp(520px, 70vh, 680px);              /* fixed viewport height */
+      --side-pad: 20px;
     }
     @media (prefers-color-scheme: light){
       :root{ --panel:#ffffff; --page:#f6f7f9; --ink:#0f172a; --muted:#6b7280; }
@@ -22,7 +22,7 @@
 
     *{box-sizing:border-box}
     html,body{height:100%}
-    html,body{overflow-x:hidden}        /* <- kill any horizontal scroll from inner content */
+    html,body{overflow-x:hidden} /* hard stop on sideways scroll */
     body{margin:0; font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:var(--page)}
 
     /* Header */
@@ -72,13 +72,12 @@
     .chat-shell{padding:0 0 18px; display:grid; place-items:center}
     .chat-frame{
       width:100%;
-      /* never exceed page; never cause horizontal scroll */
-      max-width: min(var(--chat-w), calc(100vw - (var(--side-pad) * 2)));
+      max-width: min(var(--chat-w), calc(100vw - (var(--side-pad) * 2))); /* never exceed page */
       height: var(--chat-h);
       background:var(--panel);
       border-top:1px solid color-mix(in oklab,var(--ink) 8%, #0000);
       border-radius:12px;
-      overflow:hidden;         /* contain transcript within the frame */
+      overflow:hidden; /* transcript scrolls inside */
     }
     #webchat{height:100%; width:100%}
 
@@ -86,15 +85,44 @@
     #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:var(--panel); }
     #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; width:100% }
     #webchat .webchat__avatar{ display:none !important; }
-    #webchat .webchat__basic-transcript{ padding-left:6px; padding-right:6px; overflow-x:hidden }  /* <- no sideways scroll */
+    #webchat .webchat__basic-transcript{ padding-left:6px; padding-right:6px; overflow-x:hidden } /* stop sideways scroll */
     #webchat .webchat__basic-transcript__activity{ padding:6px 10px; }
+
+    /* Bubbles */
     #webchat .webchat__bubble{ border-radius:12px; border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); box-shadow:0 6px 18px rgba(0,0,0,.06); }
     #webchat .webchat__bubble__content{ padding:10px 12px; max-width:100% }
 
-    /* Adaptive Cards & suggested actions should also never overflow */
-    #webchat .ac-container, #webchat .ac-columnSet, #webchat .ac-column, #webchat .ac-image, #webchat .ac-textBlock{ max-width:100% !important; }
-    #webchat .ac-textBlock{ overflow-wrap:anywhere }
-    #webchat .webchat__suggested-actions__carousel .webchat__carousel__content{ max-width:100%; overflow-x:auto }
+    /* --- CRITICAL WRAPPING FIXES --- */
+    /* Keep bubbles comfortably narrower than viewport */
+    #webchat .webchat__bubble__content > * { max-width:100% }
+    /* Wrap long words/URLs in text */
+    #webchat .ac-textBlock, #webchat .webchat__bubble .markdown, #webchat .webchat__bubble p { overflow-wrap:anywhere; word-break:break-word; }
+
+    /* Adaptive Cards: don't let columns or images overflow */
+    #webchat .ac-container, #webchat .ac-columnSet, #webchat .ac-column, #webchat .ac-image { max-width:100% !important; }
+
+    /* Action buttons in cards: allow wrapping & full width */
+    #webchat .ac-actionSet, #webchat .ac-actionSet > * { max-width:100% !important; }
+    #webchat .ac-pushButton, #webchat .ac-actionSet button {
+      white-space: normal !important;
+      overflow-wrap: anywhere !important;
+      max-width:100% !important;
+    }
+
+    /* Suggested actions (chips) */
+    #webchat .webchat__suggested-actions__button {
+      max-width:100%;
+      white-space: normal !important;
+      overflow-wrap:anywhere !important;
+    }
+    #webchat .webchat__suggested-actions__carousel .webchat__carousel__content{
+      max-width:100%;
+      overflow-x:auto; /* allow scroll within chips row if needed */
+      gap:8px;
+      padding-inline:2px;
+    }
+
+    /* Send box */
     #webchat .webchat__send-box{ border-top:1px solid color-mix(in oklab,var(--ink) 12%, #0000); background:var(--panel) }
     #webchat .webchat__send-box-text-box__text-area{ padding:8px 10px !important }
 
@@ -102,7 +130,7 @@
     @media (max-width: 640px){
       :root{ --chat-w: 100%; }
       .hero h1{font-size:26px}
-      .chat-frame{ height: 70vh; }
+      .chat-frame{ height: 70vh; }  /* fixed viewport on phones */
     }
 
     footer{padding:22px 0; color:var(--muted); text-align:center}
@@ -162,6 +190,7 @@
       const el = document.getElementById('webchat');
       el.innerHTML =
         '<div style="height:100%;display:grid;place-items:center;color:var(--muted)">Loading assistant…</div>';
+
       try {
         const res = await fetch(TOKEN_URL, { cache: 'no-store' });
         if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
@@ -183,7 +212,7 @@
           hideBotAvatar: true,
           hideUserAvatar: true,
 
-          /* Keep bubbles narrower than the chat viewport to avoid overflow */
+          /* Keep bubbles well inside the frame to avoid any edge-case overflow */
           bubbleMaxWidth: 560,
 
           sendBoxPlaceholder: 'Type your question…',
