@@ -2,118 +2,153 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>HANS HQ • Assistant</title>
+  <title>HANS HQ — Assistant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light" />
+  <meta name="color-scheme" content="dark light" />
   <link rel="icon" href="data:,">
   <style>
-   :root{
-  --bg:#212121;             /* your chosen dark gray */
-  --ink:#e5e5e5;            /* white-ish text */
-  --muted:#a1a1a1;          /* muted gray for footer or system text */
-  --surface:#2b2b2b;        /* input field background */
-  --brand:#3b82f6;          /* blue send button */
-  --brand-2:#2563eb;        /* hover blue */
-  --col-max:760px;
-  --header-h:56px;
-  --side-pad:16px;
-}
+    :root{
+      /* Dark, ChatGPT-like */
+      --bg: #212121;          /* page background you chose */
+      --ink: #e6e6e6;         /* primary text */
+      --muted: #b5b5b5;       /* subtle text */
+      --surface: #2b2b2b;     /* input field background */
+      --surface-2: #383838;   /* hover/alt */
+      --border: #3a3a3a;
 
-/* === Page Layout === */
-body{
-  background:var(--bg);
-  color:var(--ink);
-  font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  margin:0;
-  display:flex; flex-direction:column;
-}
+      --brand: #3b82f6;       /* send icon */
+      --brand-2:#2563eb;      /* hover */
 
-/* === Chat Styling === */
-#webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript {
-  background:transparent !important;
-}
+      --col-max: 760px;       /* center column width */
+      --header-h: 52px;
+      --side-pad: 16px;
+    }
 
-#webchat .webchat__stacked-layout{
-  --webchat__avatar-size:0px;
-}
+    *{box-sizing:border-box}
+    html,body{height:100%; overflow-x:hidden}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      display:flex; flex-direction:column;
+    }
 
-#webchat .webchat__avatar{ display:none !important; }
+    /* Header */
+    .top{
+      position:sticky; top:0; z-index:10; height:var(--header-h);
+      display:flex; align-items:center; justify-content:center;
+      background:var(--bg);
+      border-bottom:1px solid var(--border);
+    }
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
+    .badge{
+      width:24px;height:24px;border-radius:8px;
+      background:linear-gradient(135deg,#4f7cff,#3153d4);
+      display:grid;place-items:center;color:#fff;font-weight:800;font-size:11px;
+      box-shadow:0 4px 14px rgba(79,124,255,.35)
+    }
 
-/* Transcript scroll + padding */
-#webchat .webchat__basic-transcript{
-  height:100% !important;
-  overflow-y:auto !important;
-  padding:0 20px;
-}
+    /* Page column */
+    .app{flex:1 1 auto; display:flex;}
+    .col{
+      width:100%; max-width:var(--col-max); margin:0 auto;
+      padding:10px var(--side-pad) 0;
+      min-height:calc(100vh - var(--header-h));
+      display:flex; flex-direction:column; gap:10px;
+    }
 
-/* Hide timestamps and status lines */
-#webchat .webchat__timestamp,
-#webchat .webchat__row .webchat__status{
-  display:none !important;
-}
+    /* Chat region */
+    .chat-root{position:relative; flex:1 1 auto; min-height:320px;}
+    #webchat{height:100%; width:100%}
 
-/* === Bubbles (transparent) === */
-#webchat .webchat__bubble{
-  background:transparent !important;
-  border:none !important;
-  box-shadow:none !important;
-  color:var(--ink);
-  border-radius:10px;
-  max-width: calc(100% - 48px);
-  padding:0 !important;
-}
+    footer{color:var(--muted); text-align:center; padding:14px 0; font-size:13px}
 
-#webchat .webchat__bubble__content{
-  padding:4px 0;
-  background:transparent !important;
-}
+    /* ------------- Web Chat skin ------------- */
+    #webchat,
+    #webchat .webchat__stacked-layout,
+    #webchat .webchat__basic-transcript { background:transparent !important; }
 
-/* User bubble text color */
-#webchat .webchat__bubble--from-user .webchat__bubble__content{
-  color:var(--ink);
-}
+    #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; width:100% }
+    #webchat .webchat__avatar{ display:none !important; }
 
-/* === Input Bar === */
-#webchat .webchat__send-box{
-  background:var(--bg);
-  border-top:1px solid #383838;
-  padding:12px 0 16px;
-}
+    /* Transcript scroll area + safe padding so nothing clips */
+    #webchat .webchat__basic-transcript{
+      height:100% !important;
+      overflow-y:auto !important; overflow-x:hidden;
+      padding:0 20px;
+      scrollbar-gutter:stable both-edges;
+    }
+    #webchat .webchat__basic-transcript__activity{ padding:10px 0; overflow:visible; }
 
-#webchat .webchat__send-box-text-box__text-area{
-  background:var(--surface) !important;
-  color:var(--ink) !important;
-  border:1px solid #3a3a3a !important;
-  border-radius:14px !important;
-  padding:12px 12px !important;
-}
+    /* Hide timestamps/status for a seamless thread */
+    #webchat .webchat__timestamp,
+    #webchat .webchat__row .webchat__status{ display:none !important; }
 
-#webchat .webchat__send-box-text-box__text-area::placeholder{
-  color:#bdbdbd;
-}
+    /* Bubbles: transparent for BOTH bot and user */
+    #webchat .webchat__bubble{
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+      color:var(--ink);
+      border-radius:12px !important;
+      max-width:calc(100% - 48px) !important; /* respects transcript padding */
+    }
+    #webchat .webchat__bubble__content{ padding:6px 0 !important; }
 
-/* === Send button === */
-#webchat .webchat__send-box__button{
-  color:var(--brand) !important;
-}
-#webchat .webchat__send-box__button:hover{
-  color:var(--brand-2) !important;
-}
+    /* Suggested action chips (dark) */
+    #webchat .webchat__suggested-actions__button{
+      background:var(--surface);
+      color:var(--ink);
+      border:1px solid var(--border);
+      border-radius:9px; padding:7px 10px; font-size:13px;
+    }
+    #webchat .webchat__suggested-actions__button:hover{ background:var(--surface-2) }
+    #webchat .webchat__suggested-actions__carousel .webchat__carousel__content{
+      padding-inline:6px; gap:8px; max-width:100%;
+    }
 
-/* === Suggested action chips === */
-#webchat .webchat__suggested-actions__button{
-  background:#2b2b2b; 
-  color:#e5e5e5;
-  border:1px solid #3a3a3a;
-  border-radius:8px;
-  padding:6px 10px;
-}
-#webchat .webchat__suggested-actions__button:hover{
-  background:#383838;
-}
+    /* Send box (dark gray with white text) */
+    #webchat .webchat__send-box{
+      padding:12px 0 16px;
+      background:transparent;
+      border-top:1px solid var(--border);
+    }
+    #webchat .webchat__send-box-text-box__text-area{
+      background:var(--surface) !important;
+      color:#ffffff !important;
+      border:1px solid var(--border) !important;
+      border-radius:14px !important;
+      padding:12px 12px !important;
+    }
+    #webchat .webchat__send-box-text-box__text-area::placeholder{ color:#cfcfcf }
 
+    /* Send icon color */
+    #webchat .webchat__send-box__button{ color:var(--brand) !important }
+    #webchat .webchat__send-box__button:hover{ color:var(--brand-2) !important }
+
+    /* Make Adaptive Cards blend (no white panels/borders) */
+    #webchat .ac-adaptiveCard,
+    #webchat .ac-container,
+    #webchat .ac-card{
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+      color:var(--ink);
+    }
+    #webchat .ac-textBlock{ overflow-wrap:anywhere }
+    #webchat .ac-actionSet, #webchat .ac-actionSet > *{ max-width:100% !important; }
+
+    /* Mobile tweaks */
+    @media (max-width:640px){
+      :root{ --col-max:100%; }
+      .col{ padding-inline:10px }
+      #webchat .webchat__basic-transcript{ padding-inline:14px }
+      #webchat .webchat__bubble{ max-width: calc(100% - 32px) !important; }
+    }
   </style>
 
+  <!-- BotFramework Web Chat -->
   <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 </head>
 <body>
@@ -134,10 +169,11 @@ body{
     document.getElementById('year').textContent = new Date().getFullYear();
 
     (async function () {
+      // 🔁 Replace with your token endpoint if different
       const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
       const el = document.getElementById('webchat');
 
-      // ✅ Restored auto-scroll middleware that worked earlier
+      // Auto-scroll to end when new stuff appears (and on first render)
       const store = window.WebChat.createStore({}, () => next => action => {
         const result = next(action);
         if (
@@ -155,39 +191,34 @@ body{
         if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
         const { token } = await res.json();
 
-        const brand  = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
-        const brand2 = getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim();
-
         const directLine = window.WebChat.createDirectLine({ token });
 
         const styleOptions = {
           primaryFont: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
           fontSize: 15,
-          bubbleBorderRadius: 14,
-          bubbleFromUserBorderRadius: 14,
+          bubbleBorderRadius: 12,
+          bubbleFromUserBorderRadius: 12,
           bubbleNubSize: 0,
           hideUploadButton: true,
           hideBotAvatar: true,
           hideUserAvatar: true,
           sendBoxHeight: 56,
           sendBoxPlaceholder: 'Type your message…',
-          sendBoxButtonColor: brand,
-          sendBoxButtonColorOnHover: brand2,
+          sendBoxButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--brand').trim(),
+          sendBoxButtonColorOnHover: getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim(),
           backgroundColor: 'transparent',
           bubbleMaxWidth: 640
         };
 
         window.WebChat.renderWebChat({ directLine, styleOptions, store, locale: 'en-US' }, el);
 
-        // Jump to bottom on first render
+        // Jump to bottom initially
         store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'auto' } });
       } catch (e) {
         console.error(e);
-        el.innerHTML = '<div style="padding:12px;color:#b91c1c">Failed to load chat. Please refresh.</div>';
+        el.innerHTML = '<div style="padding:12px;color:#ffb4b4">Failed to load chat. Please refresh.</div>';
       }
     })();
   </script>
 </body>
 </html>
-
-
