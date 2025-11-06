@@ -11,9 +11,10 @@
       --bg:#0b1020; --ink:#0f172a; --ink-2:#334155;
       --brand:#2563eb; --brand-2:#1e40af; --ring:rgba(37,99,235,.4);
       --panel:#ffffff; --muted:#6b7280; --page:#0a0f1d;
-      --card-w: 920px;        /* page card max width */
-      --chat-w: 760px;        /* chat viewport max width (desktop) */
-      --chat-h: 640px;        /* chat viewport height (desktop) */
+      --card-w: 960px;                 /* page card max width */
+      --chat-w: 720px;                 /* chat max width on desktop */
+      --chat-h: clamp(520px, 70vh, 680px);
+      --side-pad: 20px;                /* page side padding */
     }
     @media (prefers-color-scheme: light){
       :root{ --panel:#ffffff; --page:#f6f7f9; --ink:#0f172a; --muted:#6b7280; }
@@ -21,6 +22,7 @@
 
     *{box-sizing:border-box}
     html,body{height:100%}
+    html,body{overflow-x:hidden}        /* <- kill any horizontal scroll from inner content */
     body{margin:0; font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:var(--page)}
 
     /* Header */
@@ -29,7 +31,7 @@
       background:color-mix(in oklab, var(--page) 92%, #0000);
       border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
     }
-    .nav{max-width:var(--card-w); margin:0 auto; padding:10px 20px; display:flex; align-items:center; gap:12px}
+    .nav{max-width:var(--card-w); margin:0 auto; padding:10px var(--side-pad); display:flex; align-items:center; gap:12px}
     .brand{display:flex; align-items:center; gap:10px; font-weight:700}
     .brand-badge{
       width:28px; height:28px; border-radius:8px;
@@ -47,12 +49,12 @@
       background: radial-gradient(1200px 420px at 50% -80px, color-mix(in oklab, var(--brand) 18%, #fff0), transparent), var(--bg);
       color:#e5ecff;
     }
-    .hero-inner{max-width:var(--card-w); margin:0 auto; padding:44px 20px 28px}
+    .hero-inner{max-width:var(--card-w); margin:0 auto; padding:44px var(--side-pad) 28px}
     .hero h1{margin:6px 0 8px; font-size:32px; line-height:1.2}
     .hero p{margin:0; color:#cdd8ff}
 
     /* Main card */
-    .wrap{max-width:var(--card-w); margin:0 auto; padding:22px 20px 40px}
+    .wrap{max-width:var(--card-w); margin:0 auto; padding:22px var(--side-pad) 40px}
     .card{
       background:var(--panel);
       border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
@@ -70,34 +72,39 @@
     .chat-shell{padding:0 0 18px; display:grid; place-items:center}
     .chat-frame{
       width:100%;
-      max-width:var(--chat-w);   /* keeps width reasonable */
-      height:var(--chat-h);      /* prevents auto-grow */
+      /* never exceed page; never cause horizontal scroll */
+      max-width: min(var(--chat-w), calc(100vw - (var(--side-pad) * 2)));
+      height: var(--chat-h);
       background:var(--panel);
       border-top:1px solid color-mix(in oklab,var(--ink) 8%, #0000);
       border-radius:12px;
-      overflow:hidden;           /* contain transcript */
+      overflow:hidden;         /* contain transcript within the frame */
     }
     #webchat{height:100%; width:100%}
 
-    /* Web Chat minor polish */
+    /* Web Chat polish + overflow guards */
     #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:var(--panel); }
-    #webchat .webchat__basic-transcript { padding-left:6px; padding-right:6px; }
-    #webchat .webchat__basic-transcript__activity { padding:6px 10px; }
-    #webchat .webchat__stacked-layout { --webchat__avatar-size:0px; }
-    #webchat .webchat__avatar { display:none !important; }
-    #webchat .webchat__bubble { border-radius:12px; border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); box-shadow:0 6px 18px rgba(0,0,0,.06); }
-    #webchat .webchat__bubble__content { padding:10px 12px; }
-    #webchat .webchat__send-box { border-top:1px solid color-mix(in oklab,var(--ink) 12%, #0000); background:var(--panel); }
-    #webchat .webchat__send-box-text-box__text-area { padding:8px 10px !important; }
+    #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; width:100% }
+    #webchat .webchat__avatar{ display:none !important; }
+    #webchat .webchat__basic-transcript{ padding-left:6px; padding-right:6px; overflow-x:hidden }  /* <- no sideways scroll */
+    #webchat .webchat__basic-transcript__activity{ padding:6px 10px; }
+    #webchat .webchat__bubble{ border-radius:12px; border:1px solid color-mix(in oklab,var(--ink) 10%, #0000); box-shadow:0 6px 18px rgba(0,0,0,.06); }
+    #webchat .webchat__bubble__content{ padding:10px 12px; max-width:100% }
+
+    /* Adaptive Cards & suggested actions should also never overflow */
+    #webchat .ac-container, #webchat .ac-columnSet, #webchat .ac-column, #webchat .ac-image, #webchat .ac-textBlock{ max-width:100% !important; }
+    #webchat .ac-textBlock{ overflow-wrap:anywhere }
+    #webchat .webchat__suggested-actions__carousel .webchat__carousel__content{ max-width:100%; overflow-x:auto }
+    #webchat .webchat__send-box{ border-top:1px solid color-mix(in oklab,var(--ink) 12%, #0000); background:var(--panel) }
+    #webchat .webchat__send-box-text-box__text-area{ padding:8px 10px !important }
 
     /* Mobile */
     @media (max-width: 640px){
       :root{ --chat-w: 100%; }
-      .chat-frame{ height: 70vh; border-radius:12px; }
       .hero h1{font-size:26px}
+      .chat-frame{ height: 70vh; }
     }
 
-    /* Footer */
     footer{padding:22px 0; color:var(--muted); text-align:center}
   </style>
 
@@ -143,8 +150,7 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     // Theme toggle
-    const tog = document.getElementById('themeToggle');
-    tog.addEventListener('click', () => {
+    document.getElementById('themeToggle').addEventListener('click', () => {
       const current = document.documentElement.style.colorScheme ||
         (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.style.colorScheme = current === 'dark' ? 'light' : 'dark';
@@ -153,12 +159,9 @@
     // Web Chat
     (async function () {
       const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
-
       const el = document.getElementById('webchat');
       el.innerHTML =
-        '<div style="height:100%;display:grid;place-items:center;color:var(--muted)">' +
-        '<div>Loading assistant…</div></div>';
-
+        '<div style="height:100%;display:grid;place-items:center;color:var(--muted)">Loading assistant…</div>';
       try {
         const res = await fetch(TOKEN_URL, { cache: 'no-store' });
         if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
@@ -180,8 +183,8 @@
           hideBotAvatar: true,
           hideUserAvatar: true,
 
-          /* keep bubbles comfortably narrower than container */
-          bubbleMaxWidth: 640,
+          /* Keep bubbles narrower than the chat viewport to avoid overflow */
+          bubbleMaxWidth: 560,
 
           sendBoxPlaceholder: 'Type your question…',
           sendBoxButtonColor: brand,
@@ -202,8 +205,7 @@
       } catch (e) {
         console.error(e);
         el.innerHTML =
-          '<div style="height:100%;display:grid;place-items:center;color:#b91c1c">' +
-          '<div>We couldn’t start the assistant. Please refresh this page.</div></div>';
+          '<div style="height:100%;display:grid;place-items:center;color:#b91c1c">We couldn’t start the assistant. Please refresh this page.</div>';
       }
     })();
   </script>
