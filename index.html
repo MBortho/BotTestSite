@@ -8,22 +8,23 @@
   <link rel="icon" href="data:,">
   <style>
     :root{
-      /* ChatGPT-ish neutrals */
-      --bg: #0f1115;          /* page background */
-      --ink: #e7e9ee;         /* primary text */
-      --muted: #a2a7b3;       /* secondary text */
-      --surface: #16181d;     /* send box + soft surfaces */
-      --surface-2: #1b1e24;   /* hover / subtle elements */
-      --brand:#4f7cff; --brand-2:#3153d4;
+      /* ChatGPT-like LIGHT theme */
+      --bg:#f3f4f6;          /* page gray */
+      --ink:#111827;         /* text */
+      --muted:#6b7280;       /* secondary text */
+      --surface:#ffffff;     /* input bar + user bubble */
+      --surface-2:#eef2f7;   /* hover/alt surface */
+      --brand:#2563eb; --brand-2:#1e40af;
 
-      --col-max: 760px;       /* center column width */
-      --header-h: 56px;
-      --side-pad: 16px;
+      --col-max:760px;       /* center column width */
+      --header-h:56px;
+      --side-pad:16px;
     }
-    @media (prefers-color-scheme: light){
+    @media (prefers-color-scheme: dark){
       :root{
-        --bg:#f7f8fa; --ink:#0e1116; --muted:#667085;
-        --surface:#ffffff; --surface-2:#f1f3f6;
+        /* graceful dark fallback */
+        --bg:#0f1115; --ink:#e7e9ee; --muted:#a2a7b3;
+        --surface:#16181d; --surface-2:#1b1e24;
       }
     }
 
@@ -39,15 +40,16 @@
     .top{
       position:sticky; top:0; z-index:10; height:var(--header-h);
       display:flex; align-items:center; justify-content:center;
-      background:rgba(0,0,0,.2); backdrop-filter:saturate(150%) blur(6px);
-      border-bottom:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.55);
+      backdrop-filter:saturate(150%) blur(6px);
+      border-bottom:1px solid rgba(17,24,39,.08);
     }
     .brand{display:flex; align-items:center; gap:10px; font-weight:700}
     .badge{
       width:26px;height:26px;border-radius:8px;
       background:linear-gradient(135deg,var(--brand),var(--brand-2));
       display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;
-      box-shadow:0 4px 14px rgba(79,124,255,.35)
+      box-shadow:0 4px 14px rgba(37,99,235,.25)
     }
 
     /* Layout */
@@ -60,47 +62,51 @@
     }
     .chat-root{position:relative; flex:1 1 auto; min-height:300px;}
     #webchat{height:100%; width:100%}
-
     footer{color:var(--muted); text-align:center; padding:14px 0; font-size:13px}
 
-    /* ---------- Web Chat “ChatGPT” skin ---------- */
+    /* ---------- Web Chat skin (ChatGPT-like) ---------- */
     #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:transparent; }
     #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; width:100% }
     #webchat .webchat__avatar{ display:none !important; }
 
-    /* Transcript scrolls inside; add horizontal padding so bubbles never clip */
+    /* Transcript scrolls inside column; add side padding so bubbles never clip */
     #webchat .webchat__basic-transcript{
       height:100% !important;
       overflow-y:auto !important; overflow-x:hidden;
-      padding:0 14px 0 14px;           /* <-- fixes user bubble cut-off on edges */
+      padding:0 18px;                 /* <-- prevents cut-off on both sides */
       scrollbar-gutter:stable both-edges;
     }
     #webchat .webchat__basic-transcript__activity{ padding:8px 0; }
 
-    /* Bubbles */
-    /* Assistant: no card look—transparent background, no border. */
+    /* Hide timestamps / status to keep it seamless */
+    #webchat .webchat__timestamp,
+    #webchat .webchat__row .webchat__status{ display:none !important; }
+
+    /* Assistant messages: seamless text (no cards) */
     #webchat .webchat__bubble--from-bot .webchat__bubble{
       background:transparent !important;
       border:0 !important;
       box-shadow:none !important;
     }
-    /* User: subtle gray rounded chip */
+
+    /* User messages: subtle light chip */
     #webchat .webchat__bubble--from-user .webchat__bubble{
       background:var(--surface) !important;
-      border:1px solid rgba(255,255,255,.06) !important;
-      box-shadow:0 2px 8px rgba(0,0,0,.35) !important;
+      border:1px solid rgba(17,24,39,.08) !important;
+      box-shadow:0 2px 8px rgba(0,0,0,.06) !important;
     }
-    /* Shared bubble properties */
+
+    /* Shared bubble props — ensure they never hit edges */
     #webchat .webchat__bubble{
       border-radius:14px !important;
-      max-width: 90% !important;        /* feels like ChatGPT */
+      max-width: calc(100% - 40px) !important; /* allow for our 18px side padding + gutter */
     }
     #webchat .webchat__bubble__content{ padding:10px 12px; }
 
     /* Suggested actions (chips) */
     #webchat .webchat__suggested-actions__button{
       background:var(--surface); color:var(--ink);
-      border:1px solid rgba(255,255,255,.06);
+      border:1px solid rgba(17,24,39,.08);
       border-radius:10px; padding:8px 10px; font-size:13px;
     }
     #webchat .webchat__suggested-actions__button:hover{ background:var(--surface-2) }
@@ -110,26 +116,32 @@
 
     /* Send box (slightly lighter than page) */
     #webchat .webchat__send-box{
-      padding:12px 0 16px; background:transparent; border-top:1px solid rgba(255,255,255,.06);
+      padding:12px 0 16px; background:transparent;
+      border-top:1px solid rgba(17,24,39,.08);
     }
     #webchat .webchat__send-box-text-box__text-area{
       background:var(--surface); color:var(--ink);
-      border:1px solid rgba(255,255,255,.08) !important;
+      border:1px solid rgba(17,24,39,.12) !important;
       border-radius:14px !important; padding:12px 12px !important;
     }
 
-    /* Prevent horizontal overflow in Adaptive Cards */
-    #webchat .ac-container, #webchat .ac-columnSet, #webchat .ac-column,
-    #webchat .ac-image, #webchat .ac-textBlock, #webchat .ac-actionSet, #webchat .ac-actionSet > *{
-      max-width:100% !important;
+    /* Make Adaptive Cards blend in (no white panels/borders) */
+    #webchat .ac-adaptiveCard,
+    #webchat .ac-container,
+    #webchat .ac-card,
+    #webchat .ac-container .ac-container{
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
     }
     #webchat .ac-textBlock{ overflow-wrap:anywhere }
+    #webchat .ac-actionSet, #webchat .ac-actionSet > *{ max-width:100% !important; }
 
     /* Mobile */
     @media (max-width:640px){
       :root{ --col-max:100%; }
       .col{ padding-inline:10px }
-      #webchat .webchat__bubble{ max-width:96% !important; }
+      #webchat .webchat__bubble{ max-width: calc(100% - 32px) !important; }
     }
   </style>
 
@@ -156,7 +168,7 @@
       const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
       const el = document.getElementById('webchat');
 
-      // Store that auto-scrolls to the bottom on new activity
+      // Auto-scroll-to-bottom store
       const store = window.WebChat.createStore({}, () => next => action => {
         const result = next(action);
         if (
@@ -197,8 +209,6 @@
         };
 
         window.WebChat.renderWebChat({ directLine, styleOptions, store, locale: 'en-US' }, el);
-
-        // Start scrolled to bottom
         store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'auto' } });
       } catch (e) {
         console.error(e);
