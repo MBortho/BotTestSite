@@ -9,118 +9,83 @@
   <style>
     :root {
       --page:#0a0f1d; --panel:#0b1020; --ink:#e5e7eb; --muted:#94a3b8;
-      --ring:rgba(37,99,235,.4); --brand:#2563eb; --brand-2:#1e40af;
-      --col-max:760px; --side-pad:16px; --header-h:56px; --input-h:80px;
-      --bubble:#0f172a; --bubble-user:#1e293b; --bubble-brd:rgba(255,255,255,.08);
+      --brand:#2563eb; --brand-2:#1e40af; --bubble-brd:rgba(255,255,255,.08);
+      --col-max:760px; --side-pad:16px; --header-h:56px; --frame-h:78vh; /* <- fixed */
     }
-    @media (prefers-color-scheme: light) {
-      :root {
-        --page:#f6f7f9; --panel:#ffffff; --ink:#0f172a; --muted:#6b7280;
-        --bubble:#ffffff; --bubble-user:#f3f4f6; --bubble-brd:rgba(0,0,0,.08);
-      }
+    @media (prefers-color-scheme: light){
+      :root{ --page:#f6f7f9; --panel:#ffffff; --ink:#0f172a; --muted:#6b7280; --bubble-brd:rgba(0,0,0,.08); }
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%;overflow-x:hidden}
-    body{
-      margin:0; background:var(--page); color:var(--ink);
-      font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      display:flex; flex-direction:column;
-    }
+    html,body{height:100%; overflow-x:hidden}
+    body{margin:0; background:var(--page); color:var(--ink); font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 
     /* Header */
-    .top {
-      position:sticky; top:0; z-index:10;
-      height:var(--header-h);
+    .top{position:sticky; top:0; z-index:10; height:var(--header-h);
       display:flex; align-items:center; justify-content:center;
       backdrop-filter:saturate(180%) blur(6px);
       background:color-mix(in oklab, var(--page) 92%, #0000);
-      border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
-    }
-    .brand { display:flex; align-items:center; gap:10px; font-weight:700; }
-    .badge {
-      width:26px; height:26px; border-radius:8px;
+      border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
+    .badge{width:26px;height:26px;border-radius:8px;
       background:linear-gradient(135deg,var(--brand),var(--brand-2));
-      display:grid; place-items:center; color:#fff; font-weight:800; font-size:12px;
-      box-shadow:0 4px 14px rgba(37,99,235,.35);
-    }
+      display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;
+      box-shadow:0 4px 14px rgba(37,99,235,.35)}
 
-    /* App layout */
-    .app {
-      flex:1;
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:flex-start;
-      width:100%;
-    }
+    /* Center column */
+    .wrap{max-width:var(--col-max); margin:0 auto; padding:16px var(--side-pad) 24px}
 
-    /* Transcript area */
-    .chat-area {
-      flex:1;
-      width:100%;
-      max-width:var(--col-max);
-      margin:0 auto;
-      padding:20px var(--side-pad);
-      overflow-y:auto;
-      scrollbar-gutter: stable both-edges;
-    }
-
-    /* Bubbles */
-    .webchat__bubble { max-width:90% !important; border-radius:12px; }
-    #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:transparent; }
-    #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; }
-    #webchat .webchat__avatar{ display:none !important; }
-    #webchat .webchat__basic-transcript__activity { padding:6px 0; }
-    #webchat .webchat__basic-transcript { padding:0; overflow-x:hidden; }
-
-    #webchat .webchat__bubble--from-bot .webchat__bubble {
-      background:var(--bubble); border:1px solid var(--bubble-brd);
-    }
-    #webchat .webchat__bubble--from-user .webchat__bubble {
-      background:var(--bubble-user); border:1px solid var(--bubble-brd);
-    }
-
-    /* Send box fixed bottom */
-    .input-wrap {
-      position:sticky; bottom:0;
-      width:100%;
-      background:linear-gradient(180deg, color-mix(in oklab, var(--page) 90%, transparent), var(--page));
-      padding:12px var(--side-pad) 20px;
-    }
-    .input-inner {
-      max-width:var(--col-max);
-      margin:0 auto;
-      background:var(--panel);
-      border:1px solid color-mix(in oklab,var(--ink) 10%, #0000);
-      border-radius:16px;
+    /* FIXED chat frame (page won't grow) */
+    .chat-frame{
+      height:var(--frame-h);                      /* <- fixed viewport */
+      min-height:480px; max-height:86vh;
+      border:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
+      border-radius:16px; background:var(--panel);
       box-shadow:0 10px 28px rgba(0,0,0,.08);
-      overflow:hidden;
+      overflow:hidden;                            /* transcript scrolls inside */
+      display:flex; flex-direction:column;
     }
+    #webchat{height:100%; width:100%}
 
-    footer { color:var(--muted); text-align:center; padding:12px 0; font-size:13px; }
+    /* Web Chat skin */
+    #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:transparent; }
+    #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; width:100% }
+    #webchat .webchat__avatar{ display:none !important; }
+
+    /* Transcript scrolls INSIDE frame */
+    #webchat .webchat__basic-transcript{
+      height:100% !important; overflow-y:auto !important; overflow-x:hidden;
+      padding:12px; scrollbar-gutter:stable both-edges;
+    }
+    #webchat .webchat__basic-transcript__activity{ padding:6px 0; }
+    #webchat .webchat__bubble{ border-radius:12px; border:1px solid var(--bubble-brd); max-width:92% !important; }
+    #webchat .webchat__bubble__content{ padding:10px 12px; }
+
+    /* Prevent horizontal overflow in cards/buttons */
+    #webchat .ac-container, #webchat .ac-columnSet, #webchat .ac-column, #webchat .ac-image,
+    #webchat .ac-textBlock, #webchat .ac-actionSet, #webchat .ac-actionSet > * { max-width:100% !important; }
+    #webchat .ac-textBlock { overflow-wrap:anywhere }
 
     /* Mobile */
     @media (max-width:600px){
       :root{ --col-max:100%; }
-      .chat-area { padding:10px; }
+      .wrap{padding-inline:10px}
+      .chat-frame{ height:74vh }
     }
+
+    footer{color:var(--muted); text-align:center; padding:14px 0; font-size:13px}
   </style>
 
   <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 </head>
 <body>
-  <div class="top">
-    <div class="brand"><div class="badge">HQ</div> HANS HQ</div>
-  </div>
+  <div class="top"><div class="brand"><div class="badge">HQ</div> HANS HQ</div></div>
 
-  <div class="app">
-    <div class="chat-area">
-      <div id="webchat" style="height:100%;"></div>
-    </div>
-
-    <div class="input-wrap">
-      <div class="input-inner" id="input-box"></div>
-    </div>
-  </div>
+  <main class="wrap">
+    <section class="chat-frame">
+      <div id="webchat" role="main" aria-label="Chat window"></div>
+    </section>
+  </main>
 
   <footer>© <span id="year"></span> Ortho Molecular Products</footer>
 
@@ -129,7 +94,27 @@
 
     (async function () {
       const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
-      const webchatEl = document.getElementById('webchat');
+      const el = document.getElementById('webchat');
+
+      // Create a store that autoscrolls to bottom on new content
+      let store;
+      store = window.WebChat.createStore(
+        {},
+        () => next => action => {
+          const result = next(action);
+
+          // When user sends or bot replies, scroll to end (smooth)
+          if (
+            action.type === 'DIRECT_LINE/INCOMING_ACTIVITY' ||
+            action.type === 'DIRECT_LINE/POST_ACTIVITY_FULFILLED' ||
+            action.type === 'WEB_CHAT/SUGGESTED_ACTIONS/SET'
+          ) {
+            // Defer so DOM has updated
+            setTimeout(() => store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'smooth' } }), 0);
+          }
+          return result;
+        }
+      );
 
       try {
         const res = await fetch(TOKEN_URL, { cache: 'no-store' });
@@ -151,24 +136,23 @@
           hideBotAvatar: true,
           hideUserAvatar: true,
           sendBoxHeight: 56,
-          sendBoxPlaceholder: 'Send a message...',
+          sendBoxPlaceholder: 'Send a message…',
           sendBoxButtonColor: brand,
           sendBoxButtonColorOnHover: brand2,
           backgroundColor: 'transparent',
-          bubbleMaxWidth: 640,
+          bubbleMaxWidth: 640
         };
 
         window.WebChat.renderWebChat(
-          {
-            directLine,
-            styleOptions,
-            locale: 'en-US',
-          },
-          webchatEl
+          { directLine, store, styleOptions, locale: 'en-US' },
+          el
         );
+
+        // Ensure we start scrolled to bottom on first render
+        store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'auto' } });
       } catch (err) {
         console.error(err);
-        webchatEl.innerHTML = '<div style="color:#b91c1c;padding:12px;">Failed to load chat. Refresh the page.</div>';
+        el.innerHTML = '<div style="padding:12px;color:#b91c1c">Failed to load chat. Refresh the page.</div>';
       }
     })();
   </script>
