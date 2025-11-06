@@ -7,128 +7,111 @@
   <meta name="color-scheme" content="light" />
   <link rel="icon" href="data:,">
   <style>
-    :root{
-      /* ChatGPT-like LIGHT */
-      --bg:#212121;          /* page background */
-      --ink:#101114;         /* primary text */
-      --muted:#6b7280;
-      --surface:#ffffff;     /* input + user bubble */
-      --surface-2:#eef0f3;   /* hover */
-      --brand:#2563eb; --brand-2:#1e40af;
+   :root{
+  --bg:#212121;             /* your chosen dark gray */
+  --ink:#e5e5e5;            /* white-ish text */
+  --muted:#a1a1a1;          /* muted gray for footer or system text */
+  --surface:#2b2b2b;        /* input field background */
+  --brand:#3b82f6;          /* blue send button */
+  --brand-2:#2563eb;        /* hover blue */
+  --col-max:760px;
+  --header-h:56px;
+  --side-pad:16px;
+}
 
-      --col-max:760px;
-      --header-h:56px;
-      --side-pad:16px;
-    }
+/* === Page Layout === */
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  margin:0;
+  display:flex; flex-direction:column;
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%; overflow-x:hidden}
-    body{
-      margin:0; background:var(--bg); color:var(--ink);
-      font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      display:flex; flex-direction:column;
-    }
+/* === Chat Styling === */
+#webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript {
+  background:transparent !important;
+}
 
-    /* Header (opaque, same as page so it doesn’t look “weird”) */
-    .top{
-      position:sticky; top:0; z-index:10; height:var(--header-h);
-      display:flex; align-items:center; justify-content:center;
-      background:var(--bg);
-      border-bottom:1px solid rgba(16,17,20,.08);
-    }
-    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
-    .badge{
-      width:26px;height:26px;border-radius:8px;
-      background:linear-gradient(135deg,var(--brand),var(--brand-2));
-      display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;
-      box-shadow:0 4px 14px rgba(37,99,235,.25)
-    }
+#webchat .webchat__stacked-layout{
+  --webchat__avatar-size:0px;
+}
 
-    .app{flex:1 1 auto; display:flex;}
-    .col{
-      width:100%; max-width:var(--col-max); margin:0 auto;
-      padding:10px var(--side-pad) 0;
-      min-height:calc(100vh - var(--header-h));
-      display:flex; flex-direction:column; gap:10px;
-    }
-    .chat-root{position:relative; flex:1 1 auto; min-height:300px;}
-    #webchat{height:100%; width:100%}
-    footer{color:var(--muted); text-align:center; padding:14px 0; font-size:13px}
+#webchat .webchat__avatar{ display:none !important; }
 
-    /* ---------- Web Chat skin ---------- */
-    #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:transparent; }
-    #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; width:100% }
-    #webchat .webchat__avatar{ display:none !important; }
+/* Transcript scroll + padding */
+#webchat .webchat__basic-transcript{
+  height:100% !important;
+  overflow-y:auto !important;
+  padding:0 20px;
+}
 
-    /* Transcript: add safe padding so bubbles + status never hit edges */
-    #webchat .webchat__basic-transcript{
-      height:100% !important;
-      overflow-y:auto !important; overflow-x:hidden;
-      padding:0 20px;                /* prevents side cutoffs */
-      scrollbar-gutter:stable both-edges;
-    }
-    #webchat .webchat__basic-transcript__activity{ padding:8px 0; overflow:visible; }
+/* Hide timestamps and status lines */
+#webchat .webchat__timestamp,
+#webchat .webchat__row .webchat__status{
+  display:none !important;
+}
 
-    /* Hide timestamps/status to keep it seamless and avoid clipping */
-    #webchat .webchat__timestamp,
-    #webchat .webchat__row .webchat__status{ display:none !important; }
+/* === Bubbles (transparent) === */
+#webchat .webchat__bubble{
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+  color:var(--ink);
+  border-radius:10px;
+  max-width: calc(100% - 48px);
+  padding:0 !important;
+}
 
-    /* Assistant messages: seamless (no cards) */
-    #webchat .webchat__bubble--from-bot .webchat__bubble{
-      background:transparent !important;
-      border:0 !important; box-shadow:none !important;
-    }
+#webchat .webchat__bubble__content{
+  padding:4px 0;
+  background:transparent !important;
+}
 
-    /* User messages: subtle white chip */
-    #webchat .webchat__bubble--from-user .webchat__bubble{
-      background:var(--surface) !important;
-      border:1px solid rgba(16,17,20,.08) !important;
-      box-shadow:0 2px 8px rgba(0,0,0,.04) !important;
-    }
+/* User bubble text color */
+#webchat .webchat__bubble--from-user .webchat__bubble__content{
+  color:var(--ink);
+}
 
-    /* Shared bubble props — ensure they never clip */
-    #webchat .webchat__bubble{
-      border-radius:14px !important;
-      max-width: calc(100% - 48px) !important; /* transcript padding + gutter */
-    }
-    #webchat .webchat__bubble__content{ padding:10px 12px; }
+/* === Input Bar === */
+#webchat .webchat__send-box{
+  background:var(--bg);
+  border-top:1px solid #383838;
+  padding:12px 0 16px;
+}
 
-    /* Suggested actions */
-    #webchat .webchat__suggested-actions__button{
-      background:var(--surface); color:var(--ink);
-      border:1px solid rgba(16,17,20,.10);
-      border-radius:10px; padding:8px 10px; font-size:13px;
-    }
-    #webchat .webchat__suggested-actions__button:hover{ background:var(--surface-2) }
-    #webchat .webchat__suggested-actions__carousel .webchat__carousel__content{
-      padding-inline:6px; gap:8px; max-width:100%;
-    }
+#webchat .webchat__send-box-text-box__text-area{
+  background:var(--surface) !important;
+  color:var(--ink) !important;
+  border:1px solid #3a3a3a !important;
+  border-radius:14px !important;
+  padding:12px 12px !important;
+}
 
-    /* Send box: white, slightly lighter than page */
-    #webchat .webchat__send-box{
-      padding:12px 0 16px; background:transparent;
-      border-top:1px solid rgba(16,17,20,.08);
-    }
-    #webchat .webchat__send-box-text-box__text-area{
-      background:var(--surface); color:var(--ink);
-      border:1px solid rgba(16,17,20,.12) !important;
-      border-radius:14px !important; padding:12px 12px !important;
-    }
+#webchat .webchat__send-box-text-box__text-area::placeholder{
+  color:#bdbdbd;
+}
 
-    /* Make Adaptive Cards blend (no white panels/borders) */
-    #webchat .ac-adaptiveCard, #webchat .ac-container, #webchat .ac-card{
-      background:transparent !important; border:0 !important; box-shadow:none !important;
-    }
-    #webchat .ac-textBlock{ overflow-wrap:anywhere }
-    #webchat .ac-actionSet, #webchat .ac-actionSet > *{ max-width:100% !important; }
+/* === Send button === */
+#webchat .webchat__send-box__button{
+  color:var(--brand) !important;
+}
+#webchat .webchat__send-box__button:hover{
+  color:var(--brand-2) !important;
+}
 
-    /* Mobile */
-    @media (max-width:640px){
-      :root{ --col-max:100%; }
-      .col{ padding-inline:10px }
-      #webchat .webchat__basic-transcript{ padding-inline:14px }
-      #webchat .webchat__bubble{ max-width: calc(100% - 32px) !important; }
-    }
+/* === Suggested action chips === */
+#webchat .webchat__suggested-actions__button{
+  background:#2b2b2b; 
+  color:#e5e5e5;
+  border:1px solid #3a3a3a;
+  border-radius:8px;
+  padding:6px 10px;
+}
+#webchat .webchat__suggested-actions__button:hover{
+  background:#383838;
+}
+
   </style>
 
   <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
@@ -206,4 +189,5 @@
   </script>
 </body>
 </html>
+
 
