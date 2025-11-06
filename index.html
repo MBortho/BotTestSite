@@ -4,28 +4,21 @@
   <meta charset="utf-8" />
   <title>HANS HQ • Assistant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
+  <meta name="color-scheme" content="light" />
   <link rel="icon" href="data:,">
   <style>
     :root{
-      /* ChatGPT-like LIGHT theme */
-      --bg:#f3f4f6;          /* page gray */
-      --ink:#111827;         /* text */
-      --muted:#6b7280;       /* secondary text */
-      --surface:#ffffff;     /* input bar + user bubble */
-      --surface-2:#eef2f7;   /* hover/alt surface */
+      /* ChatGPT-like LIGHT */
+      --bg:#f7f7f8;          /* page background */
+      --ink:#101114;         /* primary text */
+      --muted:#6b7280;
+      --surface:#ffffff;     /* input + user bubble */
+      --surface-2:#eef0f3;   /* hover */
       --brand:#2563eb; --brand-2:#1e40af;
 
-      --col-max:760px;       /* center column width */
+      --col-max:760px;
       --header-h:56px;
       --side-pad:16px;
-    }
-    @media (prefers-color-scheme: dark){
-      :root{
-        /* graceful dark fallback */
-        --bg:#0f1115; --ink:#e7e9ee; --muted:#a2a7b3;
-        --surface:#16181d; --surface-2:#1b1e24;
-      }
     }
 
     *{box-sizing:border-box}
@@ -36,13 +29,12 @@
       display:flex; flex-direction:column;
     }
 
-    /* Minimal header */
+    /* Header (opaque, same as page so it doesn’t look “weird”) */
     .top{
       position:sticky; top:0; z-index:10; height:var(--header-h);
       display:flex; align-items:center; justify-content:center;
-      background:rgba(255,255,255,.55);
-      backdrop-filter:saturate(150%) blur(6px);
-      border-bottom:1px solid rgba(17,24,39,.08);
+      background:var(--bg);
+      border-bottom:1px solid rgba(16,17,20,.08);
     }
     .brand{display:flex; align-items:center; gap:10px; font-weight:700}
     .badge{
@@ -52,7 +44,6 @@
       box-shadow:0 4px 14px rgba(37,99,235,.25)
     }
 
-    /* Layout */
     .app{flex:1 1 auto; display:flex;}
     .col{
       width:100%; max-width:var(--col-max); margin:0 auto;
@@ -64,49 +55,48 @@
     #webchat{height:100%; width:100%}
     footer{color:var(--muted); text-align:center; padding:14px 0; font-size:13px}
 
-    /* ---------- Web Chat skin (ChatGPT-like) ---------- */
+    /* ---------- Web Chat skin ---------- */
     #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:transparent; }
     #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; width:100% }
     #webchat .webchat__avatar{ display:none !important; }
 
-    /* Transcript scrolls inside column; add side padding so bubbles never clip */
+    /* Transcript: add safe padding so bubbles + status never hit edges */
     #webchat .webchat__basic-transcript{
       height:100% !important;
       overflow-y:auto !important; overflow-x:hidden;
-      padding:0 18px;                 /* <-- prevents cut-off on both sides */
+      padding:0 20px;                /* prevents side cutoffs */
       scrollbar-gutter:stable both-edges;
     }
-    #webchat .webchat__basic-transcript__activity{ padding:8px 0; }
+    #webchat .webchat__basic-transcript__activity{ padding:8px 0; overflow:visible; }
 
-    /* Hide timestamps / status to keep it seamless */
+    /* Hide timestamps/status to keep it seamless and avoid clipping */
     #webchat .webchat__timestamp,
     #webchat .webchat__row .webchat__status{ display:none !important; }
 
-    /* Assistant messages: seamless text (no cards) */
+    /* Assistant messages: seamless (no cards) */
     #webchat .webchat__bubble--from-bot .webchat__bubble{
       background:transparent !important;
-      border:0 !important;
-      box-shadow:none !important;
+      border:0 !important; box-shadow:none !important;
     }
 
-    /* User messages: subtle light chip */
+    /* User messages: subtle white chip */
     #webchat .webchat__bubble--from-user .webchat__bubble{
       background:var(--surface) !important;
-      border:1px solid rgba(17,24,39,.08) !important;
-      box-shadow:0 2px 8px rgba(0,0,0,.06) !important;
+      border:1px solid rgba(16,17,20,.08) !important;
+      box-shadow:0 2px 8px rgba(0,0,0,.04) !important;
     }
 
-    /* Shared bubble props — ensure they never hit edges */
+    /* Shared bubble props — ensure they never clip */
     #webchat .webchat__bubble{
       border-radius:14px !important;
-      max-width: calc(100% - 40px) !important; /* allow for our 18px side padding + gutter */
+      max-width: calc(100% - 48px) !important; /* transcript padding + gutter */
     }
     #webchat .webchat__bubble__content{ padding:10px 12px; }
 
-    /* Suggested actions (chips) */
+    /* Suggested actions */
     #webchat .webchat__suggested-actions__button{
       background:var(--surface); color:var(--ink);
-      border:1px solid rgba(17,24,39,.08);
+      border:1px solid rgba(16,17,20,.10);
       border-radius:10px; padding:8px 10px; font-size:13px;
     }
     #webchat .webchat__suggested-actions__button:hover{ background:var(--surface-2) }
@@ -114,25 +104,20 @@
       padding-inline:6px; gap:8px; max-width:100%;
     }
 
-    /* Send box (slightly lighter than page) */
+    /* Send box: white, slightly lighter than page */
     #webchat .webchat__send-box{
       padding:12px 0 16px; background:transparent;
-      border-top:1px solid rgba(17,24,39,.08);
+      border-top:1px solid rgba(16,17,20,.08);
     }
     #webchat .webchat__send-box-text-box__text-area{
       background:var(--surface); color:var(--ink);
-      border:1px solid rgba(17,24,39,.12) !important;
+      border:1px solid rgba(16,17,20,.12) !important;
       border-radius:14px !important; padding:12px 12px !important;
     }
 
-    /* Make Adaptive Cards blend in (no white panels/borders) */
-    #webchat .ac-adaptiveCard,
-    #webchat .ac-container,
-    #webchat .ac-card,
-    #webchat .ac-container .ac-container{
-      background:transparent !important;
-      border:0 !important;
-      box-shadow:none !important;
+    /* Make Adaptive Cards blend (no white panels/borders) */
+    #webchat .ac-adaptiveCard, #webchat .ac-container, #webchat .ac-card{
+      background:transparent !important; border:0 !important; box-shadow:none !important;
     }
     #webchat .ac-textBlock{ overflow-wrap:anywhere }
     #webchat .ac-actionSet, #webchat .ac-actionSet > *{ max-width:100% !important; }
@@ -141,6 +126,7 @@
     @media (max-width:640px){
       :root{ --col-max:100%; }
       .col{ padding-inline:10px }
+      #webchat .webchat__basic-transcript{ padding-inline:14px }
       #webchat .webchat__bubble{ max-width: calc(100% - 32px) !important; }
     }
   </style>
@@ -168,7 +154,7 @@
       const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
       const el = document.getElementById('webchat');
 
-      // Auto-scroll-to-bottom store
+      // ✅ Restored auto-scroll middleware that worked earlier
       const store = window.WebChat.createStore({}, () => next => action => {
         const result = next(action);
         if (
@@ -209,6 +195,8 @@
         };
 
         window.WebChat.renderWebChat({ directLine, styleOptions, store, locale: 'en-US' }, el);
+
+        // Jump to bottom on first render
         store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'auto' } });
       } catch (e) {
         console.error(e);
