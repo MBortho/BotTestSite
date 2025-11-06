@@ -7,87 +7,135 @@
   <meta name="color-scheme" content="light dark" />
   <link rel="icon" href="data:,">
   <style>
-    :root {
-      --page:#0a0f1d; --panel:#0b1020; --ink:#e5e7eb; --muted:#94a3b8;
+    :root{
+      /* Theme */
+      --page:#0a0f1d; --ink:#e5e7eb; --muted:#94a3b8;
       --brand:#2563eb; --brand-2:#1e40af; --bubble-brd:rgba(255,255,255,.08);
-      --col-max:760px; --side-pad:16px; --header-h:56px; --frame-h:78vh; /* <- fixed */
+
+      /* Layout */
+      --col-max: 760px;     /* center column width (ChatGPT-like) */
+      --header-h: 56px;     /* sticky top bar height */
+      --side-pad: 16px;
     }
     @media (prefers-color-scheme: light){
-      :root{ --page:#f6f7f9; --panel:#ffffff; --ink:#0f172a; --muted:#6b7280; --bubble-brd:rgba(0,0,0,.08); }
+      :root{ --page:#f6f7f9; --ink:#0f172a; --muted:#6b7280; --bubble-brd:rgba(0,0,0,.08) }
     }
 
     *{box-sizing:border-box}
     html,body{height:100%; overflow-x:hidden}
-    body{margin:0; background:var(--page); color:var(--ink); font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    body{
+      margin:0; background:
+        radial-gradient(1200px 420px at 50% -80px, color-mix(in oklab, var(--brand) 18%, #fff0), transparent),
+        var(--page);
+      color:var(--ink);
+      font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      display:flex; flex-direction:column;
+    }
 
-    /* Header */
-    .top{position:sticky; top:0; z-index:10; height:var(--header-h);
+    /* Header (minimal, blends like ChatGPT) */
+    .top{
+      position:sticky; top:0; z-index:10;
+      height:var(--header-h);
       display:flex; align-items:center; justify-content:center;
       backdrop-filter:saturate(180%) blur(6px);
       background:color-mix(in oklab, var(--page) 92%, #0000);
-      border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);}
+      border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
+    }
     .brand{display:flex; align-items:center; gap:10px; font-weight:700}
-    .badge{width:26px;height:26px;border-radius:8px;
+    .badge{
+      width:26px;height:26px;border-radius:8px;
       background:linear-gradient(135deg,var(--brand),var(--brand-2));
       display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;
-      box-shadow:0 4px 14px rgba(37,99,235,.35)}
-
-    /* Center column */
-    .wrap{max-width:var(--col-max); margin:0 auto; padding:16px var(--side-pad) 24px}
-
-    /* FIXED chat frame (page won't grow) */
-    .chat-frame{
-      height:var(--frame-h);                      /* <- fixed viewport */
-      min-height:480px; max-height:86vh;
-      border:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
-      border-radius:16px; background:var(--panel);
-      box-shadow:0 10px 28px rgba(0,0,0,.08);
-      overflow:hidden;                            /* transcript scrolls inside */
-      display:flex; flex-direction:column;
+      box-shadow:0 4px 14px rgba(37,99,235,.35)
     }
-    #webchat{height:100%; width:100%}
 
-    /* Web Chat skin */
+    /* App root: transcript + input all in one blended area */
+    .app{
+      flex:1 1 auto;
+      display:flex; justify-content:flex-start;
+    }
+    .col{
+      width:100%; max-width:var(--col-max); margin:0 auto;
+      padding:10px var(--side-pad) 0;
+      /* This sets the visible chat height to viewport (like ChatGPT) */
+      min-height:calc(100vh - var(--header-h));
+      display:flex; flex-direction:column;
+      gap:10px;
+    }
+
+    /* Web Chat container fills remaining space; scroll happens inside */
+    .chat-root{
+      position:relative;
+      flex:1 1 auto;
+      min-height:300px;
+      /* No borders/box — blended look */
+    }
+    #webchat{ height:100%; width:100%; }
+
+    footer{color:var(--muted); text-align:center; padding:12px 0; font-size:13px}
+
+    /* ---------- Web Chat “ChatGPT” skin ---------- */
     #webchat, #webchat .webchat__stacked-layout, #webchat .webchat__basic-transcript { background:transparent; }
     #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; width:100% }
     #webchat .webchat__avatar{ display:none !important; }
 
-    /* Transcript scrolls INSIDE frame */
+    /* Transcript fills the container; input stays at bottom inside Web Chat */
     #webchat .webchat__basic-transcript{
-      height:100% !important; overflow-y:auto !important; overflow-x:hidden;
-      padding:12px; scrollbar-gutter:stable both-edges;
+      height:100% !important;
+      overflow-y:auto !important;
+      overflow-x:hidden;
+      padding:0;             /* ChatGPT is tight to edges */
+      scrollbar-gutter:stable both-edges;
     }
-    #webchat .webchat__basic-transcript__activity{ padding:6px 0; }
-    #webchat .webchat__bubble{ border-radius:12px; border:1px solid var(--bubble-brd); max-width:92% !important; }
+    #webchat .webchat__basic-transcript__activity{ padding:8px 0; }
+
+    /* Bubbles — narrow like ChatGPT, subtle borders, centered column feel */
+    #webchat .webchat__bubble{
+      border-radius:12px; border:1px solid var(--bubble-brd);
+      max-width: 90% !important;
+    }
     #webchat .webchat__bubble__content{ padding:10px 12px; }
 
-    /* Prevent horizontal overflow in cards/buttons */
-    #webchat .ac-container, #webchat .ac-columnSet, #webchat .ac-column, #webchat .ac-image,
-    #webchat .ac-textBlock, #webchat .ac-actionSet, #webchat .ac-actionSet > * { max-width:100% !important; }
-    #webchat .ac-textBlock { overflow-wrap:anywhere }
+    /* Prevent horizontal overflow anywhere */
+    #webchat .ac-container, #webchat .ac-columnSet, #webchat .ac-column,
+    #webchat .ac-image, #webchat .ac-textBlock, #webchat .ac-actionSet, #webchat .ac-actionSet > *{
+      max-width:100% !important;
+    }
+    #webchat .ac-textBlock{ overflow-wrap:anywhere }
 
-    /* Mobile */
-    @media (max-width:600px){
-      :root{ --col-max:100%; }
-      .wrap{padding-inline:10px}
-      .chat-frame{ height:74vh }
+    /* Send box visuals (rounded, blended) */
+    #webchat .webchat__send-box{
+      padding:10px 0 14px; background:transparent;
+      border-top:1px solid color-mix(in oklab, var(--ink) 10%, #0000);
+    }
+    #webchat .webchat__send-box-text-box__text-area{
+      border-radius:14px !important; padding:12px 12px !important;
+      border:1px solid color-mix(in oklab, var(--ink) 12%, #0000) !important;
+      background:color-mix(in oklab, var(--page) 35%, transparent) !important;
     }
 
-    footer{color:var(--muted); text-align:center; padding:14px 0; font-size:13px}
+    /* Mobile */
+    @media (max-width:640px){
+      :root{ --col-max:100%; }
+      .col{ padding-inline:10px }
+      #webchat .webchat__bubble{ max-width: 96% !important; }
+    }
   </style>
-
   <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 </head>
 <body>
-  <div class="top"><div class="brand"><div class="badge">HQ</div> HANS HQ</div></div>
+  <div class="top">
+    <div class="brand"><div class="badge">HQ</div> HANS HQ</div>
+  </div>
 
-  <main class="wrap">
-    <section class="chat-frame">
-      <div id="webchat" role="main" aria-label="Chat window"></div>
-    </section>
-  </main>
-
-  <footer>© <span id="year"></span> Ortho Molecular Products</footer>
+  <div class="app">
+    <div class="col">
+      <div class="chat-root">
+        <div id="webchat" role="main" aria-label="Chat window"></div>
+      </div>
+      <footer>© <span id="year"></span> Ortho Molecular Products</footer>
+    </div>
+  </div>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -96,25 +144,18 @@
       const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
       const el = document.getElementById('webchat');
 
-      // Create a store that autoscrolls to bottom on new content
-      let store;
-      store = window.WebChat.createStore(
-        {},
-        () => next => action => {
-          const result = next(action);
-
-          // When user sends or bot replies, scroll to end (smooth)
-          if (
-            action.type === 'DIRECT_LINE/INCOMING_ACTIVITY' ||
-            action.type === 'DIRECT_LINE/POST_ACTIVITY_FULFILLED' ||
-            action.type === 'WEB_CHAT/SUGGESTED_ACTIONS/SET'
-          ) {
-            // Defer so DOM has updated
-            setTimeout(() => store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'smooth' } }), 0);
-          }
-          return result;
+      // Store middleware to auto-scroll to bottom on new content
+      const store = window.WebChat.createStore({}, () => next => action => {
+        const result = next(action);
+        if (
+          action.type === 'DIRECT_LINE/INCOMING_ACTIVITY' ||
+          action.type === 'DIRECT_LINE/POST_ACTIVITY_FULFILLED' ||
+          action.type === 'WEB_CHAT/SUGGESTED_ACTIONS/SET'
+        ) {
+          setTimeout(() => store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'smooth' } }), 0);
         }
-      );
+        return result;
+      });
 
       try {
         const res = await fetch(TOKEN_URL, { cache: 'no-store' });
@@ -128,7 +169,7 @@
 
         const styleOptions = {
           primaryFont: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
-          fontSize: '15px',
+          fontSize: 15,
           bubbleBorderRadius: 12,
           bubbleFromUserBorderRadius: 12,
           bubbleNubSize: 0,
@@ -143,16 +184,13 @@
           bubbleMaxWidth: 640
         };
 
-        window.WebChat.renderWebChat(
-          { directLine, store, styleOptions, locale: 'en-US' },
-          el
-        );
+        window.WebChat.renderWebChat({ directLine, styleOptions, store, locale: 'en-US' }, el);
 
-        // Ensure we start scrolled to bottom on first render
+        // Start at the bottom on first paint
         store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'auto' } });
-      } catch (err) {
-        console.error(err);
-        el.innerHTML = '<div style="padding:12px;color:#b91c1c">Failed to load chat. Refresh the page.</div>';
+      } catch (e) {
+        console.error(e);
+        el.innerHTML = '<div style="padding:12px;color:#b91c1c">Failed to load chat. Please refresh.</div>';
       }
     })();
   </script>
