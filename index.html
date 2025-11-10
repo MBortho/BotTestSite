@@ -166,59 +166,74 @@
   </div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-    (async function () {
-      // 🔁 Replace with your token endpoint if different
-      const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
-      const el = document.getElementById('webchat');
+  (async function () {
+    const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
+    const el = document.getElementById('webchat');
 
-      // Auto-scroll to end when new stuff appears (and on first render)
-      const store = window.WebChat.createStore({}, () => next => action => {
-        const result = next(action);
-        if (
-          action.type === 'DIRECT_LINE/INCOMING_ACTIVITY' ||
-          action.type === 'DIRECT_LINE/POST_ACTIVITY_FULFILLED' ||
-          action.type === 'WEB_CHAT/SUGGESTED_ACTIONS/SET'
-        ) {
-          setTimeout(() => store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'smooth' } }), 0);
+    // 1) Store that auto-scrolls on any incoming/outgoing activity
+    const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
+      const result = next(action);
+
+      // When anything appears in the transcript, snap to bottom
+      switch (action.type) {
+        case 'DIRECT_LINE/INCOMING_ACTIVITY':
+        case 'DIRECT_LINE/POST_ACTIVITY_FULFILLED':
+        case 'WEB_CHAT/SUGGESTED_ACTIONS/SET':
+        case 'WEB_CHAT/SET_SEND_BOX': {
+          // Defer to next tick so DOM has painted
+          setTimeout(() => {
+            dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'smooth' } });
+          }, 0);
+          break;
         }
-        return result;
-      });
-
-      try {
-        const res = await fetch(TOKEN_URL, { cache: 'no-store' });
-        if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
-        const { token } = await res.json();
-
-        const directLine = window.WebChat.createDirectLine({ token });
-
-        const styleOptions = {
-          primaryFont: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
-          fontSize: 15,
-          bubbleBorderRadius: 12,
-          bubbleFromUserBorderRadius: 12,
-          bubbleNubSize: 0,
-          hideUploadButton: true,
-          hideBotAvatar: true,
-          hideUserAvatar: true,
-          sendBoxHeight: 56,
-          sendBoxPlaceholder: 'Type your message…',
-          sendBoxButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--brand').trim(),
-          sendBoxButtonColorOnHover: getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim(),
-          backgroundColor: 'transparent',
-          bubbleMaxWidth: 640
-        };
-
-        window.WebChat.renderWebChat({ directLine, styleOptions, store, locale: 'en-US' }, el);
-
-        // Jump to bottom initially
-        store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'auto' } });
-      } catch (e) {
-        console.error(e);
-        el.innerHTML = '<div style="padding:12px;color:#ffb4b4">Failed to load chat. Please refresh.</div>';
       }
-    })();
-  </script>
+
+      return result;
+    });
+
+    try {
+      const res = await fetch(TOKEN_URL, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
+      const { token } = await res.json();
+
+      const directLine = window.WebChat.createDirectLine({ token });
+
+      const styleOptions = {
+        primaryFont: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
+        fontSize: 15,
+        bubbleBorderRadius: 12,
+        bubbleFromUserBorderRadius: 12,
+        bubbleNubSize: 0,
+        hideUploadButton: true,
+        hideBotAvatar: true,
+        hideUserAvatar: true,
+        sendBoxHeight: 56,
+        sendBoxPlaceholder: 'Type your message…',
+        sendBoxButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--brand').trim(),
+        sendBoxButtonColorOnHover: getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim(),
+        backgroundColor: 'transparent',
+        bubbleMaxWidth: 640,
+        // Hide “scroll to end” button since we always autoscroll
+        scrollToEndButtonBehavior: 'never'
+      };
+
+      window.WebChat.renderWebChat({ directLine, styleOptions, store, locale: 'en-US' }, el);
+
+      // 2) Initial jump to the bottom on first render
+      store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'auto' } });
+
+      // 3) Extra guard: if Direct Line notifies us out-of-band, still scroll
+      directLine.activity$.subscribe(() => {
+        store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'smooth' } });
+      });
+    } catch (e) {
+      console.error(e);
+      el.innerHTML = '<div style="padding:12px;color:#ffb4b4">Failed to load chat. Please refresh.</div>';
+    }
+  })();
+</script>
 </body>
 </html>
+
