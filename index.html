@@ -138,6 +138,7 @@
     }
     #webchat .ac-textBlock{ overflow-wrap:anywhere }
     #webchat .ac-actionSet, #webchat .ac-actionSet > *{ max-width:100% !important; }
+    #webchat .webchat__basic-transcript { scroll-behavior: smooth; }
 
     /* Mobile tweaks */
     @media (max-width:640px){
@@ -165,33 +166,12 @@
     </div>
   </div>
 
-  <script>
+<script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
   (async function () {
     const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
     const el = document.getElementById('webchat');
-
-    // 1) Store that auto-scrolls on any incoming/outgoing activity
-    const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
-      const result = next(action);
-
-      // When anything appears in the transcript, snap to bottom
-      switch (action.type) {
-        case 'DIRECT_LINE/INCOMING_ACTIVITY':
-        case 'DIRECT_LINE/POST_ACTIVITY_FULFILLED':
-        case 'WEB_CHAT/SUGGESTED_ACTIONS/SET':
-        case 'WEB_CHAT/SET_SEND_BOX': {
-          // Defer to next tick so DOM has painted
-          setTimeout(() => {
-            dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'smooth' } });
-          }, 0);
-          break;
-        }
-      }
-
-      return result;
-    });
 
     try {
       const res = await fetch(TOKEN_URL, { cache: 'no-store' });
@@ -215,25 +195,56 @@
         sendBoxButtonColorOnHover: getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim(),
         backgroundColor: 'transparent',
         bubbleMaxWidth: 640,
-        // Hide “scroll to end” button since we always autoscroll
         scrollToEndButtonBehavior: 'never'
       };
 
-      window.WebChat.renderWebChat({ directLine, styleOptions, store, locale: 'en-US' }, el);
+      // No custom store needed
+      window.WebChat.renderWebChat({ directLine, styleOptions, locale: 'en-US' }, el);
 
-      // 2) Initial jump to the bottom on first render
-      store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'auto' } });
+      // ---- Auto-scroll: watch the transcript DOM ----
+      function waitFor(selector, timeout = 8000) {
+        return new Promise((resolve, reject) => {
+          const found = document.querySelector(selector);
+          if (found) return resolve(found);
 
-      // 3) Extra guard: if Direct Line notifies us out-of-band, still scroll
-      directLine.activity$.subscribe(() => {
-        store.dispatch({ type: 'WEB_CHAT/SCROLL_TO_END', payload: { behavior: 'smooth' } });
-      });
+          const obs = new MutationObserver(() => {
+            const el = document.querySelector(selector);
+            if (el) { obs.disconnect(); resolve(el); }
+          });
+          obs.observe(document.body, { childList: true, subtree: true });
+          setTimeout(() => { obs.disconnect(); reject(new Error('waitFor timed out')); }, timeout);
+        });
+      }
+
+      const transcript = await waitFor('#webchat .webchat__basic-transcript');
+
+      const scrollToBottom = (instant = false) => {
+        if (!transcript) return;
+        if (instant) transcript.style.scrollBehavior = 'auto';
+        transcript.scrollTop = transcript.scrollHeight;
+        if (instant) transcript.style.scrollBehavior = '';
+      };
+
+      // Initial jump on first paint
+      scrollToBottom(true);
+
+      // Observe any change in the transcript (messages/cards/suggested actions)
+      const mo = new MutationObserver(() => scrollToBottom(false));
+      mo.observe(transcript, { childList: true, subtree: true, characterData: true });
+
+      // Safety: also scroll when DL pushes activities but DOM didn’t mutate yet
+      directLine.activity$.subscribe(() => scrollToBottom(false));
+
+      // Optional: keep pinned on resize
+      window.addEventListener('resize', () => scrollToBottom(false));
     } catch (e) {
       console.error(e);
       el.innerHTML = '<div style="padding:12px;color:#ffb4b4">Failed to load chat. Please refresh.</div>';
     }
   })();
 </script>
+
 </body>
 </html>
+
 
