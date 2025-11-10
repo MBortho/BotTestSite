@@ -5,136 +5,153 @@
   <title>HANS HQ — Assistant</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark light" />
-  data:,
+  <link rel="icon" href="data:,">
   <style>
-    :root {
-      --bg: #212121;
-      --ink: #e6e6e6;
-      --muted: #b5b5b5;
-      --surface: #2b2b2b;
-      --surface-2: #383838;
+    :root{
+      /* Dark, ChatGPT-like */
+      --bg: #212121;          /* page background you chose */
+      --ink: #e6e6e6;         /* primary text */
+      --muted: #b5b5b5;       /* subtle text */
+      --surface: #2b2b2b;     /* input field background */
+      --surface-2: #383838;   /* hover/alt */
       --border: #3a3a3a;
-      --brand: #3b82f6;
-      --brand-2: #2563eb;
-      --col-max: 760px;
+
+      --brand: #3b82f6;       /* send icon */
+      --brand-2:#2563eb;      /* hover */
+
+      --col-max: 760px;       /* center column width */
       --header-h: 52px;
       --side-pad: 16px;
     }
 
-    * { box-sizing: border-box }
-    html, body { height: 100%; overflow-x: hidden }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--ink);
-      font: 15px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      display: flex; flex-direction: column;
+    *{box-sizing:border-box}
+    html,body{height:100%; overflow-x:hidden}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      display:flex; flex-direction:column;
     }
 
-    .top {
-      position: sticky; top: 0; z-index: 10; height: var(--header-h);
-      display: flex; align-items: center; justify-content: center;
-      background: var(--bg);
-      border-bottom: 1px solid var(--border);
+    /* Header */
+    .top{
+      position:sticky; top:0; z-index:10; height:var(--header-h);
+      display:flex; align-items:center; justify-content:center;
+      background:var(--bg);
+      border-bottom:1px solid var(--border);
     }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700 }
-    .badge {
-      width: 24px; height: 24px; border-radius: 8px;
-      background: linear-gradient(135deg, #4f7cff, #3153d4);
-      display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 11px;
-      box-shadow: 0 4px 14px rgba(79, 124, 255, .35)
-    }
-
-    .app { flex: 1 1 auto; display: flex; }
-    .col {
-      width: 100%; max-width: var(--col-max); margin: 0 auto;
-      padding: 10px var(--side-pad) 0;
-      min-height: calc(100vh - var(--header-h));
-      display: flex; flex-direction: column; gap: 10px;
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
+    .badge{
+      width:24px;height:24px;border-radius:8px;
+      background:linear-gradient(135deg,#4f7cff,#3153d4);
+      display:grid;place-items:center;color:#fff;font-weight:800;font-size:11px;
+      box-shadow:0 4px 14px rgba(79,124,255,.35)
     }
 
-    .chat-root { position: relative; flex: 1 1 auto; min-height: 320px; }
-    #webchat { height: 100%; width: 100% }
+    /* Page column */
+    .app{flex:1 1 auto; display:flex;}
+    .col{
+      width:100%; max-width:var(--col-max); margin:0 auto;
+      padding:10px var(--side-pad) 0;
+      min-height:calc(100vh - var(--header-h));
+      display:flex; flex-direction:column; gap:10px;
+    }
 
-    footer { color: var(--muted); text-align: center; padding: 14px 0; font-size: 13px }
+    /* Chat region */
+    .chat-root{position:relative; flex:1 1 auto; min-height:320px;}
+    #webchat{height:100%; width:100%}
 
+    footer{color:var(--muted); text-align:center; padding:14px 0; font-size:13px}
+
+    /* ------------- Web Chat skin ------------- */
     #webchat,
     #webchat .webchat__stacked-layout,
-    #webchat .webchat__basic-transcript { background: transparent !important; }
+    #webchat .webchat__basic-transcript { background:transparent !important; }
 
-    #webchat .webchat__stacked-layout { --webchat__avatar-size: 0px; width: 100% }
-    #webchat .webchat__avatar { display: none !important; }
+    #webchat .webchat__stacked-layout{ --webchat__avatar-size:0px; width:100% }
+    #webchat .webchat__avatar{ display:none !important; }
 
-    #webchat .webchat__basic-transcript {
-      height: 100% !important;
-      overflow-y: auto !important; overflow-x: hidden;
-      padding: 0 20px;
-      scrollbar-gutter: stable both-edges;
+    /* Transcript scroll area + safe padding so nothing clips */
+    #webchat .webchat__basic-transcript{
+      height:100% !important;
+      overflow-y:auto !important; overflow-x:hidden;
+      padding:0 20px;
+      scrollbar-gutter:stable both-edges;
+      /* Smooth scrolling when we force to bottom */
       scroll-behavior: smooth;
     }
-    #webchat .webchat__basic-transcript__activity { padding: 10px 0; overflow: visible; }
+    #webchat .webchat__basic-transcript__activity{ padding:10px 0; overflow:visible; }
 
+    /* Hide timestamps/status for a seamless thread */
     #webchat .webchat__timestamp,
-    #webchat .webchat__row .webchat__status { display: none !important; }
+    #webchat .webchat__row .webchat__status{ display:none !important; }
 
-    #webchat .webchat__bubble {
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-      color: var(--ink);
-      border-radius: 12px !important;
-      max-width: calc(100% - 48px) !important;
+    /* Bubbles: transparent for BOTH bot and user */
+    #webchat .webchat__bubble{
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+      color:var(--ink);
+      border-radius:12px !important;
+      max-width:calc(100% - 48px) !important; /* respects transcript padding */
     }
-    #webchat .webchat__bubble__content { padding: 6px 0 !important; }
+    #webchat .webchat__bubble__content{ padding:6px 0 !important; }
 
-    #webchat .webchat__suggested-actions__button {
-      background: var(--surface);
-      color: var(--ink);
-      border: 1px solid var(--border);
-      border-radius: 9px; padding: 7px 10px; font-size: 13px;
+    /* Suggested action chips (dark) */
+    #webchat .webchat__suggested-actions__button{
+      background:var(--surface);
+      color:var(--ink);
+      border:1px solid var(--border);
+      border-radius:9px; padding:7px 10px; font-size:13px;
     }
-    #webchat .webchat__suggested-actions__button:hover { background: var(--surface-2) }
-    #webchat .webchat__suggested-actions__carousel .webchat__carousel__content {
-      padding-inline: 6px; gap: 8px; max-width: 100%;
+    #webchat .webchat__suggested-actions__button:hover{ background:var(--surface-2) }
+    #webchat .webchat__suggested-actions__carousel .webchat__carousel__content{
+      padding-inline:6px; gap:8px; max-width:100%;
     }
 
-    #webchat .webchat__send-box {
-      padding: 12px 0 16px;
-      background: transparent;
-      border-top: 1px solid var(--border);
+    /* Send box (dark gray with white text) */
+    #webchat .webchat__send-box{
+      padding:12px 0 16px;
+      background:transparent;
+      border-top:1px solid var(--border);
     }
-    #webchat .webchat__send-box-text-box__text-area {
-      background: var(--surface) !important;
-      color: #ffffff !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 14px !important;
-      padding: 12px 12px !important;
+    #webchat .webchat__send-box-text-box__text-area{
+      background:var(--surface) !important;
+      color:#ffffff !important;
+      border:1px solid var(--border) !important;
+      border-radius:14px !important;
+      padding:12px 12px !important;
     }
-    #webchat .webchat__send-box-text-box__text-area::placeholder { color: #cfcfcf }
+    #webchat .webchat__send-box-text-box__text-area::placeholder{ color:#cfcfcf }
 
-    #webchat .webchat__send-box__button { color: var(--brand) !important }
-    #webchat .webchat__send-box__button:hover { color: var(--brand-2) !important }
+    /* Send icon color */
+    #webchat .webchat__send-box__button{ color:var(--brand) !important }
+    #webchat .webchat__send-box__button:hover{ color:var(--brand-2) !important }
 
+    /* Make Adaptive Cards blend (no white panels/borders) */
     #webchat .ac-adaptiveCard,
     #webchat .ac-container,
-    #webchat .ac-card {
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-      color: var(--ink);
+    #webchat .ac-card{
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+      color:var(--ink);
     }
-    #webchat .ac-textBlock { overflow-wrap: anywhere }
-    #webchat .ac-actionSet, #webchat .ac-actionSet > * { max-width: 100% !important; }
+    #webchat .ac-textBlock{ overflow-wrap:anywhere }
+    #webchat .ac-actionSet, #webchat .ac-actionSet > *{ max-width:100% !important; }
 
-    @media (max-width: 640px) {
-      :root { --col-max: 100%; }
-      .col { padding-inline: 10px }
-      #webchat .webchat__basic-transcript { padding-inline: 14px }
-      #webchat .webchat__bubble { max-width: calc(100% - 32px) !important; }
+    /* Mobile tweaks */
+    @media (max-width:640px){
+      :root{ --col-max:100%; }
+      .col{ padding-inline:10px }
+      #webchat .webchat__basic-transcript{ padding-inline:14px }
+      #webchat .webchat__bubble{ max-width: calc(100% - 32px) !important; }
     }
   </style>
 
-  https://cdn.botframework.com/botframework-webchat/latest/webchat.js</script>
+  <!-- BotFramework Web Chat -->
+  <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
 </head>
 <body>
   <div class="top">
@@ -154,6 +171,7 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     (async function () {
+      // Replace if your token endpoint is different
       const TOKEN_URL = 'https://orthohqbot-cgc2dgdac5b3daaa.centralus-01.azurewebsites.net/api/directline/token';
       const el = document.getElementById('webchat');
 
@@ -162,8 +180,10 @@
         if (!res.ok) throw new Error('Token fetch failed: ' + res.status);
         const { token } = await res.json();
 
+        // Direct Line client
         const directLine = window.WebChat.createDirectLine({ token });
 
+        // Minimal style options (most look/feel handled in CSS)
         const styleOptions = {
           primaryFont: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
           fontSize: 15,
@@ -178,56 +198,52 @@
           sendBoxButtonColor: getComputedStyle(document.documentElement).getPropertyValue('--brand').trim(),
           sendBoxButtonColorOnHover: getComputedStyle(document.documentElement).getPropertyValue('--brand-2').trim(),
           backgroundColor: 'transparent',
-          bubbleMaxWidth: 640,
-          scrollToEndButtonBehavior: 'never'
+          bubbleMaxWidth: 640
         };
 
+        // Render chat
         window.WebChat.renderWebChat({ directLine, styleOptions, locale: 'en-US' }, el);
 
-        function waitFor(selector, timeout = 8000) {
-          return new Promise((resolve, reject) => {
-            const found = document.querySelector(selector);
-            if (found) return resolve(found);
+        /* -------------------- FORCE AUTO-SCROLL TO BOTTOM -------------------- */
+        const getTranscript = () =>
+          document.querySelector('#webchat .webchat__basic-transcript');
 
-            const obs = new MutationObserver(() => {
-              const el = document.querySelector(selector);
-              if (el) { obs.disconnect(); resolve(el); }
-            });
-            obs.observe(document.body, { childList: true, subtree: true });
-            setTimeout(() => { obs.disconnect(); reject(new Error('waitFor timed out')); }, timeout);
-          });
-        }
-
-        const transcript = await waitFor('#webchat .webchat__basic-transcript');
-
-        const scrollToBottom = (instant = false) => {
-          if (!transcript) return;
-          const behavior = instant ? 'auto' : 'smooth';
-          requestAnimationFrame(() => {
-            transcript.scrollTo({
-              top: transcript.scrollHeight,
-              behavior
-            });
-          });
+        const getLastActivity = () => {
+          const t = getTranscript();
+          if (!t) return null;
+          const items = t.querySelectorAll('.webchat__basic-transcript__activity');
+          return items.length ? items[items.length - 1] : null;
         };
 
-        scrollToBottom(true);
+        const forceScrollToBottom = (instant = false) => {
+          const last = getLastActivity();
+          if (!last) return;
+          const opts = { behavior: instant ? 'auto' : 'smooth', block: 'end' };
+          requestAnimationFrame(() => last.scrollIntoView(opts));
+          requestAnimationFrame(() => last.scrollIntoView(opts));
+          setTimeout(() => last.scrollIntoView(opts), 60);
+          setTimeout(() => last.scrollIntoView(opts), 120);
+        };
 
-        const mo = new MutationObserver(() => scrollToBottom(false));
-        mo.observe(transcript, { childList: true, subtree: true, characterData: true });
+        // Initial jump
+        forceScrollToBottom(true);
 
-        directLine.activity$.subscribe(() => scrollToBottom(false));
-        window.addEventListener('resize', () => scrollToBottom(false));
+        // Watch transcript DOM (new messages, expanded cards, etc.)
+        const transcript = getTranscript();
+        if (transcript) {
+          const mo = new MutationObserver(() => forceScrollToBottom(false));
+          mo.observe(transcript, { childList: true, subtree: true, characterData: true });
+        }
 
-        document.addEventListener('click', (e) => {
-          if (e.target.closest('.webchat__suggested-actions__button')) {
-            setTimeout(() => scrollToBottom(false), 100);
-          }
+        // Also on Direct Line activities
+        directLine.activity$.subscribe(() => forceScrollToBottom(false));
+
+        // Safety nets
+        window.addEventListener('resize', () => forceScrollToBottom(false));
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden) forceScrollToBottom(false);
         });
-
-        document.querySelector('#webchat').addEventListener('focusin', () => {
-          setTimeout(() => scrollToBottom(false), 100);
-        });
+        /* -------------------------------------------------------------------- */
 
       } catch (e) {
         console.error(e);
